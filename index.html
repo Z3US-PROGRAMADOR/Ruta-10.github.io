@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruta 10 — Cascos · Accesorios · Equipo</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============================================================
+  BARRA DE NAVEGACIÓN PRINCIPAL
+  Contiene: logo, botón categorías, links, buscador,
+  carrito, cuenta y botón de tema claro/oscuro.
+============================================================ -->
+<nav>
+
+  <!-- LOGO — clic devuelve al inicio de la página -->
+  <div class="logo-svg" onclick="scrollToTop()">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 58" width="180" height="52">
+      <defs>
+        <linearGradient id="metalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#ffffff"/>
+          <stop offset="40%"  stop-color="#c8c8c8"/>
+          <stop offset="100%" stop-color="#888888"/>
+        </linearGradient>
+        <linearGradient id="redGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#ff4444"/>
+          <stop offset="100%" stop-color="#cc0000"/>
+        </linearGradient>
+        <filter id="sh">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.8"/>
+        </filter>
+      </defs>
+      <text x="30" y="36" font-family="'Bebas Neue', Arial, Impact, sans-serif"
+            font-size="38" font-style="italic" letter-spacing="1"
+            fill="url(#metalGrad)" filter="url(#sh)">RUTA</text>
+      <text x="120" y="36" font-family="'Bebas Neue', Arial, Impact, sans-serif"
+            font-size="38" font-style="italic"
+            fill="url(#redGrad)" filter="url(#sh)">10</text>
+      <rect x="0" y="40" width="220" height="2" fill="#E02020" rx="1"/>
+      <text x="100" y="53" font-family="'DM Sans', Arial, sans-serif"
+            font-size="9" letter-spacing="2" fill="#bbbbbb"
+            text-anchor="middle" font-weight="500">CASCOS · ACCESORIOS · EQUIPO</text>
+    </svg>
+  </div>
+
+  <!-- BOTÓN CATEGORÍAS — abre/cierra el mega menú desplegable -->
+  <button class="nav-cat-btn" id="catMenuBtn" onclick="toggleMegaMenu()">
+    ☰ Categorías <span class="cat-arrow">▼</span>
+  </button>
+
+  <!-- LINKS DE NAVEGACIÓN — anclas a secciones de la página -->
+  <ul class="nav-links">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#mas-vendidos">Más Vendidos</a></li>
+    <li><a href="#promociones">Ofertas</a></li>
+  </ul>
+
+  <!-- ACCIONES DE LA DERECHA -->
+  <div class="nav-actions">
+
+    <!-- BUSCADOR EN TIEMPO REAL
+         - oninput → llama handleSearch() con el texto escrito
+         - onkeydown → detecta Escape para limpiar la búsqueda
+         - El botón ✕ aparece solo cuando hay texto escrito -->
+    <div class="search-bar">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input id="searchInput" type="text" placeholder="Buscar cascos, guantes…"
+             oninput="handleSearch(this.value)"
+             onkeydown="searchKeydown(event)">
+      <button class="search-clear" id="searchClear"
+              onclick="clearSearch()" style="display:none;" title="Limpiar">✕</button>
+    </div>
+
+    <!-- ÍCONO CARRITO — el badge rojo muestra la cantidad de productos -->
+    <div class="btn-icon" onclick="toggleCart()" title="Carrito">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </div>
+
+    <!-- ÍCONO MI CUENTA — abre el modal de login/registro -->
+    <div class="btn-icon" onclick="openModal()" title="Mi cuenta">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    </div>
+
+    <!-- BOTÓN INGRESAR — abre el modal de login/registro -->
+    <button class="btn-login" id="btnLogin" onclick="openModal()">Ingresar</button>
+
+    <!-- BOTÓN TEMA CLARO/OSCURO
+         ☀️ = actualmente oscuro (clic cambia a claro)
+         🌙 = actualmente claro  (clic cambia a oscuro) -->
+    <button class="btn-theme" id="themeToggle" onclick="toggleTheme()" title="Cambiar modo">
+      <span id="themeIcon">☀️</span>
+    </button>
+
+  </div>
+</nav>
+
+<!-- ============================================================
+  RESULTADOS DEL BUSCADOR
+  Aparece fija debajo de la navbar al escribir en el buscador.
+  Su contenido se genera dinámicamente en script.js → handleSearch().
+  Se oculta al presionar Escape o al hacer clic en un resultado.
+============================================================ -->
+<div class="search-results-bar" id="searchResultsBar"></div>
+
+<!-- ============================================================
+  MEGA MENÚ DE CATEGORÍAS
+  Se abre al hacer clic en el botón "Categorías" de la navbar.
+
+  ESTRUCTURA:
+  - megamenu-overlay: fondo oscuro, clic cierra el menú
+  - megamenu-search:  buscador que filtra la lista izquierda
+  - megamenu-list:    categorías principales (columna izquierda)
+  - megamenu-panel:   subcategorías de cada categoría (columna derecha)
+
+  CÓMO AGREGAR UNA CATEGORÍA NUEVA:
+  1. Agrega un <div class="megamenu-list-item"> con data-panel="nombre"
+  2. Agrega un <div class="megamenu-panel" id="panel-nombre"> con chips
+  3. Cada chip debe llamar filterAndClose('nombre') — esto filtra los
+     productos en la sección y cierra el menú automáticamente
+  4. Agrega productos con cat:'nombre' en PRODUCTS o NEW_PRODUCTS (script.js)
+============================================================ -->
+<div class="megamenu-overlay" id="megamenuOverlay" onclick="closeMegaMenu()"></div>
+
+<div class="megamenu" id="megamenu">
+
+  <!-- Buscador interno — filtra la lista izquierda en tiempo real -->
+  <div class="megamenu-search">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input type="text" id="megamenuSearchInput"
+           placeholder="Buscar categoría…"
+           oninput="filterMegaMenu(this.value)">
+  </div>
+
+  <div class="megamenu-body">
+
+    <!-- LISTA IZQUIERDA
+         data-panel debe coincidir con el id del panel derecho (sin "panel-") -->
+    <div class="megamenu-list" id="megamenuList">
+      <div class="megamenu-list-item active" data-panel="cascos"        onclick="showPanel('cascos')">        <span class="item-icon">🪖</span><span class="item-label">Cascos</span>        <span class="item-arrow">›</span></div>
+      <div class="megamenu-list-item"        data-panel="guantes"       onclick="showPanel('guantes')">       <span class="item-icon">🧤</span><span class="item-label">Guantes</span>       <span class="item-arrow">›</span></div>
+      <div class="megamenu-list-item"        data-panel="chaquetas"     onclick="showPanel('chaquetas')">     <span class="item-icon">🧥</span><span class="item-label">Chaquetas</span>     <span class="item-arrow">›</span></div>
+      <div class="megamenu-list-item"        data-panel="botas"         onclick="showPanel('botas')">         <span class="item-icon">👢</span><span class="item-label">Botas</span>         <span class="item-arrow">›</span></div>
+      <div class="megamenu-list-item"        data-panel="protecciones"  onclick="showPanel('protecciones')">  <span class="item-icon">🛡️</span><span class="item-label">Protecciones</span>  <span class="item-arrow">›</span></div>
+      <div class="megamenu-list-item"        data-panel="accesorios"    onclick="showPanel('accesorios')">    <span class="item-icon">📡</span><span class="item-label">Accesorios</span>    <span class="item-arrow">›</span></div>
+      <div class="megamenu-list-item"        data-panel="mochilas"      onclick="showPanel('mochilas')">      <span class="item-icon">🎒</span><span class="item-label">Mochilas</span>      <span class="item-arrow">›</span></div>
+      <div class="megamenu-list-item"        data-panel="mantenimiento" onclick="showPanel('mantenimiento')"> <span class="item-icon">🔧</span><span class="item-label">Mantenimiento</span> <span class="item-arrow">›</span></div>
+    </div>
+
+    <!-- PANELES DERECHOS
+         Cada chip llama filterAndClose('categoria') que:
+         1. Filtra los productos → applyFilter()
+         2. Cierra el menú     → closeMegaMenu()
+         3. Hace scroll        → a #mas-vendidos -->
+
+    <div class="megamenu-panel active" id="panel-cascos">
+      <div class="megamenu-panel-title">Cascos</div>
+      <div class="megamenu-chips">
+        <span class="megamenu-chip" onclick="filterAndClose('cascos')">Cascos Integrales</span>
+        <span class="megamenu-chip" onclick="filterAndClose('cascos')">Cascos Modulares</span>
+        <span class="megamenu-chip" onclick="filterAndClose('cascos')">Cascos Abiertos</span>
+        <span class="megamenu-chip" onclick="filterAndClose('cascos')">Cascos Off-Road</span>
+        <span class="megamenu-chip" onclick="filterAndClose('cascos')">Cascos Infantiles</span>
+        <span class="megamenu-chip" onclick="filterAndClose('cascos')">Cascos con Bluetooth</span>
+        <span class="megamenu-chip" onclick="filterAndClose('cascos')">Cascos Vintage</span>
+        <span class="megamenu-chip" onclick="filterAndClose('cascos')">Repuestos y Viseras</span>
+      </div>
+      <a class="megamenu-ver-todos" href="#mas-vendidos" onclick="filterAndClose('cascos')">Ver todos en Cascos ›</a>
+    </div>
+
+    <div class="megamenu-panel" id="panel-guantes">
+      <div class="megamenu-panel-title">Guantes</div>
+      <div class="megamenu-chips">
+        <span class="megamenu-chip" onclick="filterAndClose('guantes')">Guantes de Cuero</span>
+        <span class="megamenu-chip" onclick="filterAndClose('guantes')">Guantes de Tela</span>
+        <span class="megamenu-chip" onclick="filterAndClose('guantes')">Guantes de Invierno</span>
+        <span class="megamenu-chip" onclick="filterAndClose('guantes')">Guantes de Verano</span>
+        <span class="megamenu-chip" onclick="filterAndClose('guantes')">Guantes Off-Road</span>
+        <span class="megamenu-chip" onclick="filterAndClose('guantes')">Guantes de Pista</span>
+      </div>
+      <a class="megamenu-ver-todos" href="#mas-vendidos" onclick="filterAndClose('guantes')">Ver todos en Guantes ›</a>
+    </div>
+
+    <div class="megamenu-panel" id="panel-chaquetas">
+      <div class="megamenu-panel-title">Chaquetas</div>
+      <div class="megamenu-chips">
+        <span class="megamenu-chip" onclick="filterAndClose('chaquetas')">Chaquetas de Cuero</span>
+        <span class="megamenu-chip" onclick="filterAndClose('chaquetas')">Chaquetas Textiles</span>
+        <span class="megamenu-chip" onclick="filterAndClose('chaquetas')">Chaquetas Impermeables</span>
+        <span class="megamenu-chip" onclick="filterAndClose('chaquetas')">Chaquetas de Verano</span>
+        <span class="megamenu-chip" onclick="filterAndClose('chaquetas')">Chaquetas de Pista</span>
+        <span class="megamenu-chip" onclick="filterAndClose('chaquetas')">Chalecos</span>
+      </div>
+      <a class="megamenu-ver-todos" href="#mas-vendidos" onclick="filterAndClose('chaquetas')">Ver todos en Chaquetas ›</a>
+    </div>
+
+    <div class="megamenu-panel" id="panel-botas">
+      <div class="megamenu-panel-title">Botas</div>
+      <div class="megamenu-chips">
+        <span class="megamenu-chip" onclick="filterAndClose('botas')">Botas de Calle</span>
+        <span class="megamenu-chip" onclick="filterAndClose('botas')">Botas Off-Road</span>
+        <span class="megamenu-chip" onclick="filterAndClose('botas')">Botas de Pista</span>
+        <span class="megamenu-chip" onclick="filterAndClose('botas')">Botas Adventure</span>
+        <span class="megamenu-chip" onclick="filterAndClose('botas')">Botas Impermeables</span>
+      </div>
+      <a class="megamenu-ver-todos" href="#mas-vendidos" onclick="filterAndClose('botas')">Ver todos en Botas ›</a>
+    </div>
+
+    <div class="megamenu-panel" id="panel-protecciones">
+      <div class="megamenu-panel-title">Protecciones</div>
+      <div class="megamenu-chips">
+        <span class="megamenu-chip" onclick="filterAndClose('protecciones')">Protectores de Espalda</span>
+        <span class="megamenu-chip" onclick="filterAndClose('protecciones')">Rodilleras</span>
+        <span class="megamenu-chip" onclick="filterAndClose('protecciones')">Coderas</span>
+        <span class="megamenu-chip" onclick="filterAndClose('protecciones')">Petos</span>
+        <span class="megamenu-chip" onclick="filterAndClose('protecciones')">Pantalones con Protección</span>
+        <span class="megamenu-chip" onclick="filterAndClose('protecciones')">Airbag Moto</span>
+      </div>
+      <a class="megamenu-ver-todos" href="#mas-vendidos" onclick="filterAndClose('protecciones')">Ver todos en Protecciones ›</a>
+    </div>
+
+    <div class="megamenu-panel" id="panel-accesorios">
+      <div class="megamenu-panel-title">Accesorios</div>
+      <div class="megamenu-chips">
+        <span class="megamenu-chip" onclick="filterAndClose('accesorios')">Intercomunicadores</span>
+        <span class="megamenu-chip" onclick="filterAndClose('accesorios')">GPS para Moto</span>
+        <span class="megamenu-chip" onclick="filterAndClose('accesorios')">Soportes de Celular</span>
+        <span class="megamenu-chip" onclick="filterAndClose('accesorios')">Candados y Alarmas</span>
+        <span class="megamenu-chip" onclick="filterAndClose('accesorios')">Luces LED</span>
+        <span class="megamenu-chip" onclick="filterAndClose('accesorios')">Cobertores de Moto</span>
+        <span class="megamenu-chip" onclick="filterAndClose('accesorios')">Alforjas y Baúles</span>
+        <span class="megamenu-chip" onclick="filterAndClose('accesorios')">Cámaras de Acción</span>
+      </div>
+      <a class="megamenu-ver-todos" href="#mas-vendidos" onclick="filterAndClose('accesorios')">Ver todos en Accesorios ›</a>
+    </div>
+
+    <div class="megamenu-panel" id="panel-mochilas">
+      <div class="megamenu-panel-title">Mochilas</div>
+      <div class="megamenu-chips">
+        <span class="megamenu-chip" onclick="filterAndClose('mochilas')">Mochilas de Hidratación</span>
+        <span class="megamenu-chip" onclick="filterAndClose('mochilas')">Mochilas Impermeables</span>
+        <span class="megamenu-chip" onclick="filterAndClose('mochilas')">Bolsas de Depósito</span>
+        <span class="megamenu-chip" onclick="filterAndClose('mochilas')">Bolsas de Pierna</span>
+      </div>
+      <a class="megamenu-ver-todos" href="#mas-vendidos" onclick="filterAndClose('mochilas')">Ver todos en Mochilas ›</a>
+    </div>
+
+    <div class="megamenu-panel" id="panel-mantenimiento">
+      <div class="megamenu-panel-title">Mantenimiento</div>
+      <div class="megamenu-chips">
+        <span class="megamenu-chip" onclick="filterAndClose('mantenimiento')">Aceites y Lubricantes</span>
+        <span class="megamenu-chip" onclick="filterAndClose('mantenimiento')">Limpieza de Casco</span>
+        <span class="megamenu-chip" onclick="filterAndClose('mantenimiento')">Líquido de Frenos</span>
+        <span class="megamenu-chip" onclick="filterAndClose('mantenimiento')">Kits de Limpieza</span>
+        <span class="megamenu-chip" onclick="filterAndClose('mantenimiento')">Herramientas</span>
+        <span class="megamenu-chip" onclick="filterAndClose('mantenimiento')">Spray Lubricante</span>
+      </div>
+      <a class="megamenu-ver-todos" href="#mas-vendidos" onclick="filterAndClose('mantenimiento')">Ver todos en Mantenimiento ›</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+  BANNER / SLIDER AUTOMÁTICO
+  Cambia de imagen cada 6 segundos.
+  Los botones ‹ › permiten cambiar manualmente.
+  Los puntos · indican el slide activo.
+
+  CÓMO CAMBIAR LAS IMÁGENES:
+  Edita background-image: url('Imagenes/TU_IMAGEN.jpg')
+  en cada div.slide-bg. Pon las imágenes en la carpeta "Imagenes/".
+
+  CÓMO AGREGAR UN SLIDE MÁS:
+  1. Copia un bloque <div class="slide"> y pégalo aquí
+  2. Agrega un <div class="dot"> extra en .banner-dots
+============================================================ -->
+<section class="banner" id="inicio" style="padding:0;">
+
+  <!-- SLIDE 1 — edita texto e imagen aquí -->
+  <div class="slide active" id="slide0">
+    <div class="slide-bg" style="background-image: url('Imagenes/Proteje tu cabeza.JPG');"></div>
+    <div class="slide-overlay"></div>
+    <div class="slide-content">
+      <span class="slide-tag">Nuevo 2026</span>
+      <div class="slide-title">Protege tu Cabeza<br>Con Estilo</div>
+      <p class="slide-desc">Cascos certificados DOT y ECE. La mejor selección de marcas internacionales al mejor precio.</p>
+      <button class="btn-slide" onclick="filterAndClose('cascos')">Ver Catálogo</button>
+    </div>
+  </div>
+
+  <!-- SLIDE 2 — edita texto e imagen aquí -->
+  <div class="slide" id="slide1">
+    <div class="slide-bg" style="background-image: url('Imagenes/Guantes y proteccion.jpg');"></div>
+    <div class="slide-overlay"></div>
+    <div class="slide-content">
+      <span class="slide-tag">Oferta Flash</span>
+      <div class="slide-title">Guantes &<br>Protecciones</div>
+      <p class="slide-desc">30% de descuento en toda la línea de guantes de cuero. Solo por tiempo limitado.</p>
+      <button class="btn-slide" onclick="filterAndClose('guantes')">Ver Ofertas</button>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 — edita texto e imagen aquí -->
+  <div class="slide" id="slide2">
+    <div class="slide-bg" style="background-image: url('Imagenes/Ruta 10.jpg');"></div>
+    <div class="slide-overlay"></div>
+    <div class="slide-content">
+      <span class="slide-tag">Exclusivo</span>
+      <div class="slide-title">Accesorios<br>Premium</div>
+      <p class="slide-desc">Intercomunicadores, GPS y equipamiento de alto rendimiento para el rider exigente.</p>
+      <button class="btn-slide" onclick="filterAndClose('accesorios')">Explorar</button>
+    </div>
+  </div>
+
+  <button class="banner-arrow prev" onclick="changeBanner(-1)">&#8249;</button>
+  <button class="banner-arrow next" onclick="changeBanner(1)">&#8250;</button>
+  <div class="banner-dots">
+    <div class="dot active" onclick="goToSlide(0)"></div>
+    <div class="dot"        onclick="goToSlide(1)"></div>
+    <div class="dot"        onclick="goToSlide(2)"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+  BARRA DE FILTRO ACTIVO
+  Aparece solo cuando hay una categoría seleccionada.
+  Muestra el nombre de la categoría activa y un botón para quitarla.
+  Se controla desde script.js → applyFilter() y clearFilter().
+============================================================ -->
+<div class="filter-bar" id="filterBar" style="display:none;">
+  <span>Mostrando: <strong id="filterLabel">Todos</strong></span>
+  <button onclick="clearFilter()">✕ Quitar filtro</button>
+</div>
+
+<div class="quick-filters" id="quickFilters">
+    <button class="qf-btn active" onclick="quickFilter('all',          this)">Todos</button>
+    <button class="qf-btn"        onclick="quickFilter('cascos',       this)">🪖 Cascos</button>
+    <button class="qf-btn"        onclick="quickFilter('guantes',      this)">🧤 Guantes</button>
+    <button class="qf-btn"        onclick="quickFilter('chaquetas',    this)">🧥 Chaquetas</button>
+    <button class="qf-btn"        onclick="quickFilter('botas',        this)">👢 Botas</button>
+    <button class="qf-btn"        onclick="quickFilter('accesorios',   this)">📡 Accesorios</button>
+    <button class="qf-btn"        onclick="quickFilter('protecciones', this)">🛡️ Protecciones</button>
+    <button class="qf-btn"        onclick="quickFilter('mochilas',     this)">🎒 Mochilas</button>
+    <button class="qf-btn"        onclick="quickFilter('mantenimiento',this)">🔧 Mantenimiento</button>
+  </div>
+
+<!-- ============================================================
+  SECCIÓN NUEVOS INGRESOS
+  Las tarjetas se generan automáticamente desde script.js.
+  PARA AGREGAR PRODUCTOS: edita el array NEW_PRODUCTS en script.js.
+============================================================ -->
+<section id="nuevos" style="background:var(--dark);">
+  <div class="section-header">
+    <h2 class="section-title">NUEVOS <span>INGRESOS</span></h2>
+    <a href="#" class="section-link">Ver todo →</a>
+  </div>
+  <!-- script.js inyecta las tarjetas aquí mediante innerHTML -->
+  <div class="products-grid" id="newGrid"></div>
+</section>
+
+<!-- ============================================================
+  SECCIÓN LO MÁS VENDIDO
+  Incluye filtros rápidos por categoría.
+  Las tarjetas se generan automáticamente desde script.js.
+  PARA AGREGAR PRODUCTOS: edita el array PRODUCTS en script.js.
+
+  FILTROS RÁPIDOS:
+  quickFilter('categoria', this) → filtra tarjetas y resalta el botón.
+  quickFilter('all', this)       → muestra todos los productos.
+============================================================ -->
+<section id="mas-vendidos" style="background:var(--darker);">
+  <div class="section-header">
+    <h2 class="section-title">LO MÁS <span>VENDIDO</span></h2>
+    <a href="#" class="section-link">Ver todo →</a>
+  </div>
+
+  <!-- script.js inyecta las tarjetas aquí mediante innerHTML -->
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<!-- ============================================================
+  SECCIÓN TODOS LOS PRODUCTOS
+  Catálogo completo de la tienda.
+  PARA AGREGAR PRODUCTOS: edita ALL_PRODUCTS en script.js
+  IDs disponibles: del 300 al 999
+============================================================ -->
+<section id="all-products" style="background:var(--dark);">
+  <div class="section-header">
+    <h2 class="section-title">TODOS LOS <span>PRODUCTOS</span></h2>
+    <a href="#" class="section-link">Ver todo →</a>
+  </div>
+  <!-- ALL_PRODUCTS se inyecta aquí automáticamente desde script.js -->
+  <div class="products-grid" id="allProductsGrid"></div>
+</section>
+
+<!-- ============================================================
+  FRANJA PROMOCIONAL
+  Para editar: cambia el texto directamente en este bloque HTML.
+============================================================ -->
+<section class="promo-strip" id="promociones" style="padding:3rem 6%;">
+  <div class="promo-text">
+    <h2>¡ENVÍO GRATIS en compras mayores a $200.000</h2>
+    <p>Para todo Colombia. Entrega en 24–48 horas a las principales ciudades.</p>
+  </div>
+  <button class="promo-cta">Ver condiciones</button>
+</section>
+
+<!-- ============================================================
+  POR QUÉ ELEGIRNOS
+  Para editar: cambia el texto directamente en este bloque HTML.
+  Para agregar una tarjeta: copia un .feat-item y pégalo.
+============================================================ -->
+<section class="features" id="nosotros">
+  <p class="section-label">Por qué elegirnos</p>
+  <h2 class="section-title" style="margin-bottom:2rem;">Diferencia de <span>Ruta 10</span></h2>
+  <div class="feat-grid">
+    <div class="feat-item">
+      <div class="feat-icon">🏁</div>
+      <div class="feat-title">Marcas Líderes</div>
+      <p class="feat-desc">Trabajamos con las mejores marcas del mundo para garantizarte calidad real en cada pieza.</p>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon">🛡️</div>
+      <div class="feat-title">Seguridad Primero</div>
+      <p class="feat-desc">Todo nuestro equipo cumple con certificaciones internacionales de seguridad vigentes.</p>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">Envíos Rápidos</div>
+      <p class="feat-desc">Despachamos a todo el país. Tu pedido sale el mismo día si ordenas antes del mediodía.</p>
+    </div>
+    <div class="feat-item">
+      <div class="feat-icon">💬</div>
+      <div class="feat-title">Asesoría Experta</div>
+      <p class="feat-desc">Nuestro equipo te guía para encontrar el equipo perfecto según tu estilo de rodada.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+  FOOTER
+  Para editar links: cambia href="#" por la URL real.
+  Para editar textos: cámbialos directamente aquí.
+============================================================ -->
+<footer>
+  <div class="footer-grid">
+
+    <!-- Columna 1: logo y descripción de la tienda -->
+    <div class="footer-brand">
+      <div class="logo-svg" style="margin-bottom:1rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 58" width="180" height="48">
+          <defs>
+            <linearGradient id="metalGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="#ffffff"/>
+              <stop offset="40%"  stop-color="#c8c8c8"/>
+              <stop offset="100%" stop-color="#888888"/>
+            </linearGradient>
+            <linearGradient id="redGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="#ff4444"/>
+              <stop offset="100%" stop-color="#cc0000"/>
+            </linearGradient>
+            <filter id="sh2">
+              <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.8"/>
+            </filter>
+          </defs>
+          <text x="30" y="36" font-family="'Bebas Neue', Arial, Impact, sans-serif"
+                font-size="38" font-style="italic" letter-spacing="1"
+                fill="url(#metalGrad2)" filter="url(#sh2)">RUTA</text>
+          <text x="120" y="36" font-family="'Bebas Neue', Arial, Impact, sans-serif"
+                font-size="38" font-style="italic"
+                fill="url(#redGrad2)" filter="url(#sh2)">10</text>
+          <rect x="0" y="40" width="197" height="2" fill="#E02020" rx="1"/>
+          <text x="100" y="53" font-family="'DM Sans', Arial, sans-serif"
+                font-size="9" letter-spacing="2" fill="#aaaaaa"
+                text-anchor="middle" font-weight="500">CASCOS · ACCESORIOS · EQUIPO</text>
+        </svg>
+      </div>
+      <p class="footer-desc">Tu tienda especializada en cascos y accesorios para motociclistas. Calidad, seguridad y estilo en cada kilómetro.</p>
+    </div>
+
+    <!-- Columna 2: links de ayuda -->
+    <div class="footer-col">
+      <h4>Ayuda</h4>
+      <ul>
+        <li><a href="Imagenes/guia de tallas.jpg">Guía de tallas</a></li>
+        <li><a href="#">Política de cambios</a></li>
+        <li><a href="#">Garantías</a></li>
+        <li><a href="#">Seguimiento</a></li>
+      </ul>
+    </div>
+
+    <!-- Columna 3: datos de contacto — edita con tu información real -->
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href="https://www.google.com/maps/place/11%C2%B014'17.7%22N+74%C2%B012'20.6%22W/@11.2382493,-74.2063727,19z/data=!3m1!4b1!4m4!3m3!8m2!3d11.238248!4d-74.205729?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D">📍 Santa Marta, Colombia</a></li>
+        <li><a href="#">📞 +57 300 000 0000</a></li>
+        <li><a href="#">✉️ info@ruta10.co</a></li>
+        <li><a href="https://www.instagram.com/rruta10/" target="_blank">📸 Instagram</a></li>
+        <li><a href="#">💬 WhatsApp</a></li>
+      </ul>
+    </div>
+
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 RUTA 10 · CASCOS · ACCESORIOS · EQUIPO. Todos los derechos reservados.</p>
+    <p>Hecho con ❤️ para riders colombianos</p>
+  </div>
+</footer>
+
+<!-- ============================================================
+  MODAL DE LOGIN / REGISTRO
+  switchTab(tab, this) recibe el botón clickeado como parámetro
+  para evitar depender de la variable global "event" (más seguro).
+============================================================ -->
+<div class="modal-overlay" id="authModal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2>BIENVENIDO</h2>
+    <p>Inicia sesión o crea tu cuenta</p>
+    <div class="modal-tabs">
+      <!-- "this" pasa el botón actual a switchTab para resaltarlo -->
+      <button class="modal-tab active"  onclick="switchTab('login',    this)">Iniciar sesión</button>
+      <button class="modal-tab"         onclick="switchTab('register', this)">Registrarse</button>
+    </div>
+    <!-- Formulario de inicio de sesión -->
+    <div id="loginForm">
+      <div class="form-group"><label>Correo electrónico</label><input type="email"    placeholder="tu@email.com"></div>
+      <div class="form-group"><label>Contraseña</label>        <input type="password" placeholder="••••••••"></div>
+      <button class="btn-submit" onclick="handleLogin()">Ingresar</button>
+      <p style="text-align:center; margin-top:1rem; color:var(--muted); font-size:0.82rem;">
+        ¿Olvidaste tu contraseña? <a href="#" style="color:var(--red);">Recuperar</a>
+      </p>
+    </div>
+    <!-- Formulario de registro de cuenta nueva -->
+    <div id="registerForm" style="display:none;">
+      <div class="form-group"><label>Nombre completo</label>   <input type="text"     placeholder="Tu nombre"></div>
+      <div class="form-group"><label>Correo electrónico</label><input type="email"    placeholder="tu@email.com"></div>
+      <div class="form-group"><label>Contraseña</label>        <input type="password" placeholder="Mín. 8 caracteres"></div>
+      <div class="form-group"><label>Teléfono</label>          <input type="tel"      placeholder="+57 300 000 0000"></div>
+      <button class="btn-submit" onclick="handleRegister()">Crear cuenta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+  PANEL LATERAL DEL CARRITO
+  Se desliza desde la derecha al hacer clic en el ícono del carrito.
+  Su contenido (ítems, cantidades, total) se genera en script.js.
+============================================================ -->
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header">
+    <h3>🛒 CARRITO</h3>
+    <button class="btn-icon" onclick="toggleCart()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="18" y1="6"  x2="6"  y2="18"/>
+        <line x1="6"  y1="6"  x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <!-- Los ítems del carrito se inyectan aquí por renderCart() en script.js -->
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <div style="font-size:3rem;">🛒</div>
+      <p style="text-align:center;">Tu carrito está vacío.<br>¡Agrega productos!</p>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cartTotal" style="color:var(--red);">$0</span>
+    </div>
+    <button class="btn-checkout" onclick="checkout()">Finalizar compra</button>
+  </div>
+</div>
+
+<!-- ============================================================
+  MODAL SELECCIÓN DE TALLA Y COLOR
+============================================================ -->
+<div class="modal-overlay" id="productModal" onclick="closeProductModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeProductModal()">×</button>
+    <h2 id="pmProductName" style="font-size:1.3rem; margin-bottom:1.5rem; line-height:1.3;"></h2>
+
+    <!-- Tallas -->
+    <div id="pmSizesWrap">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+        <p class="pm-label">Selecciona la talla</p>
+        <span class="pm-required">Obligatorio ∧</span>
+      </div>
+      <div class="pm-options" id="pmSizes"></div>
+      <a href="#" class="pm-guide">Guía de tallas 📏</a>
+    </div>
+
+    <!-- Colores -->
+    <div id="pmColorsWrap" style="margin-top:1.5rem;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+        <p class="pm-label">Selecciona el color del visor<span style="font-size:1rem;">🙂</span></p>
+        <span class="pm-required">Obligatorio ∧</span>
+      </div>
+      <div class="pm-options" id="pmColors"></div>
+    </div>
+
+    <button class="btn-submit" style="margin-top:2rem;" onclick="confirmAddToCart()">
+      Agregar al carrito
+    </button>
+  </div>
+</div>
+
+<!-- ============================================================
+  NOTIFICACIÓN TOAST
+  Aparece en la esquina inferior derecha por 3 segundos.
+  Se activa desde script.js → showToast('emoji', 'mensaje').
+============================================================ -->
+<div class="toast" id="toast">
+  <span id="toastIcon">✅</span>
+  <span id="toastMsg">Producto agregado</span>
+</div>
+
+<!-- script.js se carga al final para que el DOM esté listo -->
+<script src="script.js"></script>
+</body>
+</html>
