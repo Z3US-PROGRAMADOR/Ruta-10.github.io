@@ -46,6 +46,18 @@
     </svg>
   </div>
 
+  <!-- ============================================================
+  BARRA DE FILTRO ACTIVO
+  Aparece solo cuando hay una categoría seleccionada.
+  Muestra el nombre de la categoría activa y un botón para quitarla.
+  Se controla desde script.js → applyFilter() y clearFilter().
+============================================================ -->
+<div class="filter-bar" id="filterBar" style="display:none;">
+  <span>Mostrando: <strong id="filterLabel">Todos</strong></span>
+  <button onclick="clearFilter()">✕ Quitar filtro</button>
+</div>
+
+
   <!-- BOTÓN CATEGORÍAS — abre/cierra el mega menú desplegable -->
   <button class="nav-cat-btn" id="catMenuBtn" onclick="toggleMegaMenu()">
     ☰ Categorías <span class="cat-arrow">▼</span>
@@ -114,6 +126,7 @@
   Se oculta al presionar Escape o al hacer clic en un resultado.
 ============================================================ -->
 <div class="search-results-bar" id="searchResultsBar"></div>
+
 
 <!-- ============================================================
   MEGA MENÚ DE CATEGORÍAS
@@ -337,29 +350,6 @@
 </section>
 
 <!-- ============================================================
-  BARRA DE FILTRO ACTIVO
-  Aparece solo cuando hay una categoría seleccionada.
-  Muestra el nombre de la categoría activa y un botón para quitarla.
-  Se controla desde script.js → applyFilter() y clearFilter().
-============================================================ -->
-<div class="filter-bar" id="filterBar" style="display:none;">
-  <span>Mostrando: <strong id="filterLabel">Todos</strong></span>
-  <button onclick="clearFilter()">✕ Quitar filtro</button>
-</div>
-
-<div class="quick-filters" id="quickFilters">
-    <button class="qf-btn active" onclick="quickFilter('all',          this)">Todos</button>
-    <button class="qf-btn"        onclick="quickFilter('cascos',       this)">🪖 Cascos</button>
-    <button class="qf-btn"        onclick="quickFilter('guantes',      this)">🧤 Guantes</button>
-    <button class="qf-btn"        onclick="quickFilter('chaquetas',    this)">🧥 Chaquetas</button>
-    <button class="qf-btn"        onclick="quickFilter('botas',        this)">👢 Botas</button>
-    <button class="qf-btn"        onclick="quickFilter('accesorios',   this)">📡 Accesorios</button>
-    <button class="qf-btn"        onclick="quickFilter('protecciones', this)">🛡️ Protecciones</button>
-    <button class="qf-btn"        onclick="quickFilter('mochilas',     this)">🎒 Mochilas</button>
-    <button class="qf-btn"        onclick="quickFilter('mantenimiento',this)">🔧 Mantenimiento</button>
-  </div>
-
-<!-- ============================================================
   SECCIÓN NUEVOS INGRESOS
   Las tarjetas se generan automáticamente desde script.js.
   PARA AGREGAR PRODUCTOS: edita el array NEW_PRODUCTS en script.js.
@@ -414,7 +404,7 @@
 ============================================================ -->
 <section class="promo-strip" id="promociones" style="padding:3rem 6%;">
   <div class="promo-text">
-    <h2>¡ENVÍO GRATIS en compras mayores a $200.000</h2>
+    <h2>¡ENVÍO GRATIS en compras mayores a $1.500.000</h2>
     <p>Para todo Colombia. Entrega en 24–48 horas a las principales ciudades.</p>
   </div>
   <button class="promo-cta">Ver condiciones</button>
@@ -604,13 +594,13 @@
         <span class="pm-required">Obligatorio ∧</span>
       </div>
       <div class="pm-options" id="pmSizes"></div>
-      <a href="#" class="pm-guide">Guía de tallas 📏</a>
+      <a href="Imagenes/guia de tallas.jpg" class="pm-guide">Guía de tallas 📏</a>
     </div>
 
     <!-- Colores -->
     <div id="pmColorsWrap" style="margin-top:1.5rem;">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
-        <p class="pm-label">Selecciona el color del visor<span style="font-size:1rem;">🙂</span></p>
+        <p class="pm-label">Selecciona el color<span style="font-size:1rem;">🙂</span></p>
         <span class="pm-required">Obligatorio ∧</span>
       </div>
       <div class="pm-options" id="pmColors"></div>

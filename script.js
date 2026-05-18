@@ -39,16 +39,16 @@
    ============================================================ */
 
 const ALL_PRODUCTS = [
-{ id: 1,  name: 'Casco Integral AGV K6 S',       brand: 'AGV',        price: 850000,  oldPrice: 1100000,
-    cat: 'cascos',    img: '', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
-    sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:true},{s:'XL',out:false}],
-    colors: ['Negro Mate','Blanco Perla','Rojo Racing'] },
+{ id: 1,  name: 'Casco Integral HRO 506', brand: 'HRO', price: 300000,  oldPrice: null,
+    cat: 'cascos',    img: 'Imagenes/Productos/Casco HRO 506 Negro visor rojo.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:true}],
+    colors: ['Negro Mate','Blanco Brillante','Gris Brillante'] },
 
 ];
 
 /* ── PRODUCTOS MÁS VENDIDOS ── */
 const PRODUCTS = [
-  { id: 1,  name: 'Casco Integral AGV K6 S',       brand: 'AGV',        price: 850000,  oldPrice: 1100000,
+  { id: 100,  name: 'Casco Integral AGV K6 S',       brand: 'AGV',        price: 850000,  oldPrice: 1100000,
     cat: 'cascos',    img: '', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
     sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:true},{s:'XL',out:false}],
     colors: ['Negro Mate','Blanco Perla','Rojo Racing'] },
@@ -88,10 +88,11 @@ const PRODUCTS = [
 
 /* ── NUEVOS INGRESOS ── */
 const NEW_PRODUCTS = [
-  { id: 8,  name: 'Casco LS2 FF900 Valiant II',    brand: 'LS2',        price: 430000,  oldPrice: 520000,
-    cat: 'cascos',    img: '', icon: '🪖', badge: 'sale', stars: 4, reviews: 95,  stock: true,
-    sizes: [{s:'XS',out:false},{s:'S',out:false},{s:'M',out:true},{s:'L',out:false}],
-    colors: ['Blanco Brillante','Negro Mate'] },
+  { id: 1,  name: 'Casco Integral HRO 506', brand: 'HRO', price: 300000,  oldPrice: null,
+    cat: 'cascos',    img: 'Imagenes/Productos/Casco HRO 506 Negro visor rojo.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:true}],
+    colors: ['Negro Mate','Blanco Brillante','Gris Brillante'] },
+
 ];
 
 /* ── ESTADO GLOBAL ── */
