@@ -120,6 +120,18 @@
 </nav>
 
 <!-- ============================================================
+  BARRA DE BÚSQUEDA MÓVIL
+  Visible solo en pantallas menores a 768px.
+  Reemplaza el buscador de la navbar que se oculta en móvil.
+============================================================ -->
+<div class="mobile-search-bar" id="mobileSearchBar">
+  <input type="text" placeholder="🔍 Buscar cascos, guantes…"
+         oninput="handleSearch(this.value)"
+         onkeydown="searchKeydown(event)">
+  <button class="mobile-cat-btn" onclick="toggleMegaMenu()">☰ Categorías</button>
+</div>
+
+<!-- ============================================================
   RESULTADOS DEL BUSCADOR
   Aparece fija debajo de la navbar al escribir en el buscador.
   Su contenido se genera dinámicamente en script.js → handleSearch().
@@ -489,7 +501,7 @@
       <ul>
         <li><a href="Imagenes/guia de tallas.jpg">Guía de tallas</a></li>
         <li><a href="#">Política de cambios</a></li>
-        <li><a href="#">Garantías</a></li>
+        <li><a href="garantias.html">Garantías</a></li>
         <li><a href="#">Seguimiento</a></li>
       </ul>
     </div>
@@ -539,10 +551,11 @@
     </div>
     <!-- Formulario de registro de cuenta nueva -->
     <div id="registerForm" style="display:none;">
-      <div class="form-group"><label>Nombre completo</label>   <input type="text"     placeholder="Tu nombre"></div>
-      <div class="form-group"><label>Correo electrónico</label><input type="email"    placeholder="tu@email.com"></div>
-      <div class="form-group"><label>Contraseña</label>        <input type="password" placeholder="Mín. 8 caracteres"></div>
-      <div class="form-group"><label>Teléfono</label>          <input type="tel"      placeholder="+57 300 000 0000"></div>
+      <form>
+      <div class="form-group"><label>Nombre completo</label>   <input type="text"     placeholder="Tu nombre" required></div>
+      <div class="form-group"><label>Correo electrónico</label><input type="email"    placeholder="tu@email.com" required></div>
+      <div class="form-group"><label>Contraseña</label>        <input type="password" placeholder="Mín. 8 caracteres" required></div>
+      <div class="form-group"><label>Teléfono</label>          <input type="tel"      placeholder="+57 300 000 0000" [0-9]{10} required></div></form>
       <button class="btn-submit" onclick="handleRegister()">Crear cuenta</button>
     </div>
   </div>
@@ -600,7 +613,7 @@
     <!-- Colores -->
     <div id="pmColorsWrap" style="margin-top:1.5rem;">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
-        <p class="pm-label">Selecciona el color<span style="font-size:1rem;">🙂</span></p>
+        <p class="pm-label">Selecciona el color <span style="font-size:1rem;">🙂</span></p>
         <span class="pm-required">Obligatorio ∧</span>
       </div>
       <div class="pm-options" id="pmColors"></div>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garantías — Ruta 10</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ============================================================
+     ESTILOS ESPECÍFICOS DE LA PÁGINA DE GARANTÍAS
+  ============================================================ */
+
+  /* Hero banner de la página */
+  .garantia-hero {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0000 50%, #0a0a0a 100%);
+    padding: 7rem 6% 4rem;
+    border-bottom: 3px solid var(--red);
+    text-align: center;
+  }
+  .garantia-hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    letter-spacing: 3px;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .garantia-hero h1 span { color: var(--red); }
+  .garantia-hero p {
+    color: rgba(255,255,255,0.65);
+    font-size: 1.05rem;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* Contenedor principal */
+  .garantia-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 4rem 6%;
+  }
+
+  /* Tabla de tiempos */
+  .garantia-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0 2rem;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .garantia-tabla th {
+    background: var(--red);
+    color: #fff;
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .garantia-tabla td {
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+  .garantia-tabla tr:last-child td { border-bottom: none; }
+  .garantia-tabla td:last-child {
+    font-weight: 700;
+    color: var(--red);
+  }
+
+  /* Tarjetas de pasos del proceso */
+  .pasos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 1.5rem 0 2rem;
+  }
+  .paso-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--red);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+  }
+  .paso-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--red);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .paso-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+  .paso-desc {
+    font-size: 0.83rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Bloque de sección con título rojo */
+  .g-section { margin-bottom: 3rem; }
+  .g-section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--red);
+    color: var(--text);
+  }
+  .g-section-subtitle {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 1.2rem 0 0.5rem;
+    color: var(--text);
+  }
+  .g-section p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.75;
+    margin-bottom: 0.75rem;
+  }
+  .g-section ul {
+    padding-left: 1.2rem;
+    margin-bottom: 0.75rem;
+  }
+  .g-section ul li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 4px;
+  }
+  .g-section ul li::marker { color: var(--red); }
+
+  /* Banner de alerta */
+  .g-alert {
+    background: rgba(224,32,32,0.08);
+    border: 1px solid rgba(224,32,32,0.25);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.6;
+    margin: 1rem 0;
+  }
+  .g-alert strong { color: var(--red); }
+
+  /* Tarjetas de contacto */
+  .contacto-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-top: 1.5rem;
+  }
+  .contacto-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: border-color 0.2s;
+  }
+  .contacto-card:hover { border-color: var(--red); }
+  .contacto-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .contacto-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .contacto-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .contacto-value a {
+    color: var(--red);
+    text-decoration: none;
+  }
+
+  /* Separador decorativo */
+  .g-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* Nota legal */
+  .g-nota {
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* Modo claro */
+  body.light-mode .garantia-hero { background: linear-gradient(135deg, #f0f0f0, #fff 50%, #f0f0f0); }
+  body.light-mode .garantia-hero p { color: #555; }
+  body.light-mode .paso-card { background: #fff; border-color: #ddd; }
+  body.light-mode .contacto-card { background: #fff; border-color: #ddd; }
+  body.light-mode .g-nota { background: #f5f5f5; border-color: #ddd; }
+  body.light-mode .g-alert { background: rgba(224,32,32,0.05); }
+  body.light-mode .garantia-tabla td { background: #fff; }
+
+  @media (max-width: 700px) {
+    .pasos-grid    { grid-template-columns: 1fr; }
+    .contacto-grid { grid-column: 1fr; }
+    .garantia-hero h1 { font-size: 2.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+  NAVBAR — igual que en index.html
+============================================================ -->
+<nav>
+  <a class="logo-svg" href="index.html">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 58" width="180" height="52">
+      <defs>
+        <linearGradient id="metalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#ffffff"/>
+          <stop offset="40%"  stop-color="#c8c8c8"/>
+          <stop offset="100%" stop-color="#888888"/>
+        </linearGradient>
+        <linearGradient id="redGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#ff4444"/>
+          <stop offset="100%" stop-color="#cc0000"/>
+        </linearGradient>
+        <filter id="sh">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.8"/>
+        </filter>
+      </defs>
+      <text x="30" y="36" font-family="'Bebas Neue', Arial, Impact, sans-serif"
+            font-size="38" font-style="italic" letter-spacing="1"
+            fill="url(#metalGrad)" filter="url(#sh)">RUTA</text>
+      <text x="120" y="36" font-family="'Bebas Neue', Arial, Impact, sans-serif"
+            font-size="38" font-style="italic"
+            fill="url(#redGrad)" filter="url(#sh)">10</text>
+      <rect x="0" y="40" width="220" height="2" fill="#E02020" rx="1"/>
+      <text x="100" y="53" font-family="'DM Sans', Arial, sans-serif"
+            font-size="9" letter-spacing="2" fill="#bbbbbb"
+            text-anchor="middle" font-weight="500">CASCOS · ACCESORIOS · EQUIPO</text>
+    </svg>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="index.html#inicio">Inicio</a></li>
+    <li><a href="index.html#mas-vendidos">Productos</a></li>
+    <li><a href="index.html#promociones">Ofertas</a></li>
+    <li><a href="garantias.html" style="color:#fff;">Garantías</a></li>
+  </ul>
+
+  <div class="nav-actions">
+    <a href="index.html" class="btn-login" style="text-decoration:none;">← Volver a la tienda</a>
+    <button class="btn-theme" onclick="toggleTheme()" title="Cambiar modo">
+      <span id="themeIcon">☀️</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ============================================================
+  HERO
+============================================================ -->
+<div class="garantia-hero">
+  <h1>POLÍTICA DE <span>GARANTÍA</span></h1>
+  <p>En Ruta 10 respaldamos cada producto que vendemos. Conoce los tiempos, condiciones y el proceso paso a paso para hacer válida tu garantía.</p>
+</div>
+
+<!-- ============================================================
+  CONTENIDO PRINCIPAL
+============================================================ -->
+<div class="garantia-wrap">
+
+  <!-- ── ¿QUÉ CUBRE? ── -->
+  <div class="g-section">
+    <h2 class="g-section-title">¿QUÉ CUBRE LA GARANTÍA?</h2>
+
+    <div class="g-section-subtitle">Defectos de fabricación</div>
+    <p>Productos que presenten problemas en su funcionamiento (desempeño de las funciones para las cuales fueron fabricados) y defectos de calidad detectados por el cliente al momento de recibir el producto o durante el período de garantía bajo condiciones normales de uso.</p>
+
+    <div class="g-section-subtitle">Defectos de calidad</div>
+    <p>Problemas que aparezcan después de ser usados durante el período que cubre la garantía, tales como:</p>
+    <ul>
+      <li>Defectos de fabricación que no permitan el funcionamiento adecuado del artículo.</li>
+      <li>Fallas en sistemas mecánicos como visores, sistemas abatibles, o correas de retención.</li>
+      <li>Defectos en costuras, cierres e impermeabilidad en textiles.</li>
+      <li>Problemas de pintura, gráficos o textura en piezas plásticas atribuibles a la fabricación.</li>
+    </ul>
+
+    <div class="g-section-subtitle">Novedades en el transporte</div>
+    <p>Cuando se comprueba que durante el envío se presentaron fallas como producto roto, embalaje deteriorado, sello roto u otras alteraciones visibles.</p>
+  </div>
+
+  <!-- ── TIEMPOS ── -->
+  <div class="g-section">
+    <h2 class="g-section-title">TIEMPOS DE GARANTÍA</h2>
+    <p>La vigencia inicia a partir del día de entrega del producto y la aceptación de la factura.</p>
+    <table class="garantia-tabla">
+      <thead>
+        <tr>
+          <th>Tipo de producto</th>
+          <th>Tiempo de garantía</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>🪖 Cascos (todos los tipos)</td><td>6 meses</td></tr>
+        <tr><td>🧥 Chaquetas y textiles</td><td>3 meses</td></tr>
+        <tr><td>🧤 Guantes</td><td>3 meses</td></tr>
+        <tr><td>👢 Botas</td><td>3 meses</td></tr>
+        <tr><td>🛡️ Protecciones</td><td>3 meses</td></tr>
+        <tr><td>📡 Accesorios electrónicos</td><td>3 meses</td></tr>
+        <tr><td>🎒 Mochilas y bolsos</td><td>3 meses</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── QUÉ NO CUBRE ── -->
+  <div class="g-section">
+    <h2 class="g-section-title">¿QUÉ NO CUBRE LA GARANTÍA?</h2>
+    <ul>
+      <li>Daños causados por mal uso, modificaciones no autorizadas o daño físico por almacenamiento inadecuado (rayones, golpes).</li>
+      <li>Manejo inadecuado del producto o sus componentes por desconocimiento del uso correcto.</li>
+      <li>Uso de accesorios o elementos no recomendados por el fabricante.</li>
+      <li>Aplicación de líquidos no autorizados (aceites, solventes, pinturas, ácidos).</li>
+      <li>Exposición directa al fuego.</li>
+      <li>Desgaste natural del producto, sus componentes y partes.</li>
+      <li>Reclamos realizados después del período establecido de garantía.</li>
+    </ul>
+    <div class="g-alert">
+      <strong>Importante:</strong> Un casco que haya recibido un impacto fuerte (caída o accidente) pierde su certificación de seguridad aunque no presente daños visibles. En este caso la garantía no aplica, pero te recomendamos reemplazarlo de inmediato.
+    </div>
+  </div>
+
+  <div class="g-divider"></div>
+
+  <!-- ── PROCESO ── -->
+  <div class="g-section">
+    <h2 class="g-section-title">PROCESO PASO A PASO</h2>
+    <p>Para activar tu garantía ten a mano el producto, la factura de compra y todos sus accesorios originales. Seguimos estos pasos:</p>
+
+    <div class="pasos-grid">
+      <div class="paso-card">
+        <div class="paso-num">01</div>
+        <div class="paso-title">Contáctanos</div>
+        <div class="paso-desc">Escríbenos por WhatsApp o correo con tu número de factura, foto del producto y descripción del problema.</div>
+      </div>
+      <div class="paso-card">
+        <div class="paso-num">02</div>
+        <div class="paso-title">Revisión inicial</div>
+        <div class="paso-desc">Nuestro equipo evalúa si el caso aplica como garantía y te informamos en máximo 1 día hábil.</div>
+      </div>
+      <div class="paso-card">
+        <div class="paso-num">03</div>
+        <div class="paso-title">Envío del producto</div>
+        <div class="paso-desc">Si aplica, coordinamos la recolección del producto. Debe estar bien empacado en caja con todos sus accesorios originales.</div>
+      </div>
+      <div class="paso-card">
+        <div class="paso-num">04</div>
+        <div class="paso-title">Diagnóstico y solución</div>
+        <div class="paso-desc">Evaluamos el producto y procedemos con la reparación, reemplazo o nota de crédito. Tiempo estimado: 5 a 10 días hábiles.</div>
+      </div>
+    </div>
+
+    <div class="g-alert">
+      <strong>Tiempo de respuesta:</strong> Trabajamos para darte solución entre <strong>1 y 5 días hábiles</strong>, con un máximo de 10 días hábiles dependiendo de la complejidad y los tiempos de envío, según lo establece la Ley 1480 del Estatuto del Consumidor.
+    </div>
+  </div>
+
+  <!-- ── DEVOLUCIONES ── -->
+  <div class="g-section">
+    <h2 class="g-section-title">DEVOLUCIONES Y CAMBIOS</h2>
+
+    <div class="g-section-subtitle">¿Cuándo puedo devolver un producto?</div>
+    <ul>
+      <li><strong>Problemas de calidad:</strong> cuando el producto tiene una falla de fabricación comprobada por nuestro equipo técnico.</li>
+      <li><strong>Novedades en el transporte:</strong> producto roto, embalaje deteriorado o sello roto al momento de recibir.</li>
+      <li><strong>Producto incorrecto:</strong> cuando te llegó un artículo diferente al que compraste.</li>
+    </ul>
+
+    <div class="g-section-subtitle">Derecho de retracto</div>
+    <p>Tienes <strong>5 días hábiles</strong> desde que recibes el producto para ejercer el derecho de retracto. El artículo debe estar sin usar, en condiciones originales, con empaque, accesorios y etiquetas intactas. Los costos de envío de retorno son asumidos por el cliente.</p>
+
+    <div class="g-section-subtitle">Cambios</div>
+    <p>Tienes hasta <strong>5 días hábiles</strong> para solicitar un cambio. Si el producto está en condiciones apropiadas, el cambio será aprobado. Eres responsable de los costos de envío, excepto en casos de garantía.</p>
+
+    <div class="g-section-subtitle">Reemplazos</div>
+    <ul>
+      <li>Si el producto fue descontinuado o está agotado, se entregará un producto similar con las mismas características y los mismos términos de garantía.</li>
+      <li>Si no es posible el reemplazo, se otorgará una <strong>nota de crédito</strong> por el valor facturado o la devolución del dinero.</li>
+    </ul>
+  </div>
+
+  <div class="g-divider"></div>
+
+  <!-- ── CONTACTO ── -->
+  <div class="g-section">
+    <h2 class="g-section-title">CANALES DE CONTACTO</h2>
+    <p>Para solicitar garantía, cambio o devolución comunícate con nosotros por cualquiera de estos canales:</p>
+
+    <div class="contacto-grid">
+      <div class="contacto-card">
+        <div class="contacto-icon">💬</div>
+        <div>
+          <div class="contacto-label">WhatsApp</div>
+          <div class="contacto-value"><a href="https://wa.me/573000000000" target="_blank">+57 300 000 0000</a></div>
+        </div>
+      </div>
+      <div class="contacto-card">
+        <div class="contacto-icon">✉️</div>
+        <div>
+          <div class="contacto-label">Correo electrónico</div>
+          <div class="contacto-value"><a href="mailto:garantias@ruta10.co">garantias@ruta10.co</a></div>
+        </div>
+      </div>
+      <div class="contacto-card">
+        <div class="contacto-icon">📍</div>
+        <div>
+          <div class="contacto-label">Punto de venta</div>
+          <div class="contacto-value"><a href="https://www.google.com/maps/place/11%C2%B014'17.7%22N+74%C2%B012'20.6%22W/@11.2382493,-74.2063727,19z/data=!3m1!4b1!4m4!3m3!8m2!3d11.238248!4d-74.205729?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D">📍 Santa Marta, Colombia</a></div>
+        </div>
+      </div>
+      <div class="contacto-card">
+        <div class="contacto-icon">📸</div>
+        <div>
+          <div class="contacto-label">Instagram</div>
+          <div class="contacto-value"><a href="https://www.instagram.com/rruta10/" target="_blank">@rruta10</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── NOTA LEGAL ── -->
+  <div class="g-nota">
+    Las presentes políticas son sujetas a cambio y revisión sin previo aviso. En casos fortuitos donde un fabricante se retire del mercado sin establecer criterios de garantía, Ruta 10 no estará en capacidad de otorgarlas directamente. Todos los procesos se rigen según la Ley 1480 del Estatuto del Consumidor de Colombia.
+  </div>
+
+</div>
+
+<!-- ============================================================
+  FOOTER — igual que en index.html
+============================================================ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-svg" style="margin-bottom:1rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 58" width="160" height="44">
+          <defs>
+            <linearGradient id="mg2" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="40%" stop-color="#c8c8c8"/>
+              <stop offset="100%" stop-color="#888888"/>
+            </linearGradient>
+            <linearGradient id="rg2" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#ff4444"/>
+              <stop offset="100%" stop-color="#cc0000"/>
+            </linearGradient>
+            <filter id="sh2">
+              <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.8"/>
+            </filter>
+          </defs>
+          <text x="30" y="36" font-family="'Bebas Neue', Arial, Impact, sans-serif"
+                font-size="38" font-style="italic" letter-spacing="1"
+                fill="url(#mg2)" filter="url(#sh2)">RUTA</text>
+          <text x="120" y="36" font-family="'Bebas Neue', Arial, Impact, sans-serif"
+                font-size="38" font-style="italic"
+                fill="url(#rg2)" filter="url(#sh2)">10</text>
+          <rect x="0" y="40" width="197" height="2" fill="#E02020" rx="1"/>
+          <text x="100" y="53" font-family="'DM Sans', Arial, sans-serif"
+                font-size="9" letter-spacing="2" fill="#aaaaaa"
+                text-anchor="middle" font-weight="500">CASCOS · ACCESORIOS · EQUIPO</text>
+        </svg>
+      </div>
+      <p class="footer-desc">Tu tienda especializada en cascos y accesorios para motociclistas. Calidad, seguridad y estilo en cada kilómetro.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Información</h4>
+      <ul>
+        <li><a href="garantias.html">Garantías</a></li>
+        <li><a href="#">Guía de tallas</a></li>
+        <li><a href="#">Política de cambios</a></li>
+        <li><a href="#">Seguimiento de pedido</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href="#">📍 Santa Marta, Colombia</a></li>
+        <li><a href="#">📞 +57 300 000 0000</a></li>
+        <li><a href="#">✉️ info@ruta10.co</a></li>
+        <li><a href="https://www.instagram.com/rruta10/" target="_blank">📸 Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 RUTA 10 · CASCOS · ACCESORIOS · EQUIPO. Todos los derechos reservados.</p>
+    <p>Hecho con ❤️ para riders colombianos</p>
+  </div>
+</footer>
+
+<script>
+/* ── Modo claro/oscuro ── */
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light-mode');
+  document.getElementById('themeIcon').textContent = isLight ? '🌙' : '☀️';
+  localStorage.setItem('ruta10_theme', isLight ? 'light' : 'dark');
+}
+(function() {
+  if (localStorage.getItem('ruta10_theme') === 'light') {
+    document.body.classList.add('light-mode');
+    const icon = document.getElementById('themeIcon');
+    if (icon) icon.textContent = '🌙';
+  }
+})();
+</script>
+</body>
+</html>

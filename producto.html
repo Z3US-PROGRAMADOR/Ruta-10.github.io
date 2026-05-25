@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Producto — Ruta 10</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ============================================================
+   PÁGINA DE DETALLE DE PRODUCTO
+============================================================ */
+
+/* Empuja el contenido bajo la navbar */
+.pd-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6rem 4% 4rem;
+}
+
+/* Miga de pan */
+.breadcrumb {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.breadcrumb a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.breadcrumb a:hover { color: var(--red); }
+.breadcrumb span { color: var(--text); font-weight: 500; }
+
+/* Layout principal: galería izquierda + info derecha */
+.pd-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 4rem;
+}
+
+/* ── GALERÍA ── */
+.pd-gallery { position: sticky; top: 80px; align-self: start; }
+
+.pd-main-img {
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9rem;
+  overflow: hidden;
+  margin-bottom: 12px;
+  position: relative;
+}
+.pd-main-img img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+}
+.pd-badge-overlay {
+  position: absolute;
+  top: 14px; left: 14px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Miniaturas */
+.pd-thumbs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pd-thumb {
+  width: 72px; height: 72px;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.pd-thumb:hover { border-color: var(--muted); }
+.pd-thumb.active { border-color: var(--red); }
+.pd-thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+
+/* ── INFO DEL PRODUCTO ── */
+
+.pd-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+.pd-brand {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--red);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+.pd-share {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: border-color 0.2s;
+}
+.pd-share:hover { border-color: var(--red); color: var(--red); }
+
+.pd-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 0.5px;
+  line-height: 1.15;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+/* Estrellas y reseñas */
+.pd-stars {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.25rem;
+}
+.pd-stars-icons { color: var(--gold); font-size: 1rem; }
+.pd-stars-count { font-size: 0.82rem; color: var(--muted); }
+.pd-stars-count a { color: var(--red); text-decoration: none; }
+
+/* Precio */
+.pd-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 0.5rem;
+}
+.pd-price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--red);
+}
+.pd-old-price {
+  font-size: 1.1rem;
+  color: var(--muted);
+  text-decoration: line-through;
+}
+.pd-discount {
+  background: rgba(224,32,32,0.12);
+  color: var(--red);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.pd-iva { font-size: 0.78rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+/* Separador */
+.pd-divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
+
+/* Selector de tallas */
+.pd-option-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.pd-option-label strong { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+.pd-option-label a { font-size: 0.8rem; color: var(--red); text-decoration: none; }
+.pd-option-label a:hover { text-decoration: underline; }
+
+.pd-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+.pd-size-btn {
+  min-width: 52px;
+  height: 44px;
+  padding: 0 12px;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.pd-size-btn:hover:not(:disabled) {
+  border-color: var(--red);
+  color: var(--red);
+}
+.pd-size-btn.active {
+  border-color: var(--red);
+  background: var(--red);
+  color: #fff;
+  font-weight: 700;
+}
+.pd-size-btn.agotado {
+  opacity: 0.4;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  border-style: dashed;
+}
+/* Línea diagonal en botones agotados */
+.pd-size-btn.agotado::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    transparent calc(50% - 0.5px),
+    rgba(150,150,150,0.5) calc(50% - 0.5px),
+    rgba(150,150,150,0.5) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+  border-radius: 7px;
+  pointer-events: none;
+}
+
+/* Selector de colores */
+.pd-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+.pd-color-btn {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  color: var(--text);
+  font-size: 0.84rem;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pd-color-btn:hover  { border-color: var(--red); color: var(--red); }
+.pd-color-btn.active { border-color: var(--red); background: var(--red); color: #fff; font-weight: 700; }
+
+/* Cantidad */
+.pd-qty-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.pd-qty-label { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+.pd-qty-control {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.pd-qty-btn {
+  width: 38px; height: 38px;
+  background: var(--card);
+  border: none;
+  color: var(--text);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.pd-qty-btn:hover { background: var(--card2); }
+.pd-qty-num {
+  width: 44px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.95rem; font-weight: 600; color: var(--text);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  background: var(--darker);
+}
+
+/* Botones de acción */
+.pd-actions { display: flex; flex-direction: column; gap: 10px; }
+.pd-btn-cart {
+  width: 100%;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  letter-spacing: 0.5px;
+}
+.pd-btn-cart:hover { opacity: 0.88; }
+.pd-btn-fav {
+  width: 100%;
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pd-btn-fav:hover { border-color: var(--red); color: var(--red); }
+
+/* Envío y garantía */
+.pd-perks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 1.5rem;
+}
+.pd-perk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+.pd-perk span { font-size: 1.1rem; }
+
+/* ── TABS DE DESCRIPCIÓN ── */
+.pd-tabs { margin-bottom: 4rem; }
+.pd-tab-btns {
+  display: flex;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 1.5rem;
+  gap: 0;
+  overflow-x: auto;
+}
+.pd-tab-btn {
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.pd-tab-btn:hover { color: var(--text); }
+.pd-tab-btn.active { color: var(--red); border-bottom-color: var(--red); }
+
+.pd-tab-content { display: none; }
+.pd-tab-content.active { display: block; }
+
+.pd-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.8; }
+.pd-desc p { margin-bottom: 0.75rem; }
+.pd-desc ul { padding-left: 1.2rem; }
+.pd-desc ul li { margin-bottom: 6px; }
+.pd-desc ul li::marker { color: var(--red); }
+
+/* Tabla de especificaciones */
+.pd-specs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.pd-specs tr:nth-child(even) td { background: var(--card); }
+.pd-specs td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+}
+.pd-specs td:first-child {
+  font-weight: 700;
+  color: var(--text);
+  width: 38%;
+}
+
+/* ── PRODUCTOS RELACIONADOS ── */
+.pd-related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .pd-main { grid-template-columns: 1fr; gap: 2rem; }
+  .pd-gallery { position: static; }
+  .pd-related-grid { grid-template-columns: repeat(2, 1fr); }
+  .pd-wrapper { padding: 5rem 4% 3rem; }
+}
+@media (max-width: 600px) {
+  .pd-name { font-size: 1.6rem; }
+  .pd-price { font-size: 1.6rem; }
+  .pd-related-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .pd-tab-btn { padding: 10px 14px; font-size: 0.82rem; }
+  .pd-thumb { width: 58px; height: 58px; }
+}
+
+/* Modo claro */
+body.light-mode .pd-main-img  { background: #f5f5f5; border-color: #ddd; }
+body.light-mode .pd-thumb     { background: #f5f5f5; border-color: #ddd; }
+body.light-mode .pd-size-btn  { color: #333; border-color: #ccc; }
+body.light-mode .pd-color-btn { color: #333; border-color: #ccc; }
+body.light-mode .pd-qty-btn   { background: #e8e8e8; color: #111; }
+body.light-mode .pd-qty-num   { background: #f0f0f0; color: #111; border-color: #ddd; }
+body.light-mode .pd-qty-control { border-color: #ccc; }
+body.light-mode .pd-btn-fav   { color: #333; border-color: #ccc; }
+body.light-mode .pd-specs tr:nth-child(even) td { background: #f5f5f5; }
+body.light-mode .pd-specs td  { border-color: #e0e0e0; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+  NAVBAR
+============================================================ -->
+<nav>
+  <a class="logo-svg" href="index.html">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 58" width="180" height="52">
+      <defs>
+        <linearGradient id="metalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#ffffff"/>
+          <stop offset="40%"  stop-color="#c8c8c8"/>
+          <stop offset="100%" stop-color="#888888"/>
+        </linearGradient>
+        <linearGradient id="redGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#ff4444"/>
+          <stop offset="100%" stop-color="#cc0000"/>
+        </linearGradient>
+        <filter id="sh">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.8"/>
+        </filter>
+      </defs>
+      <text x="30" y="36" font-family="'Bebas Neue', Arial, sans-serif"
+            font-size="38" font-style="italic" letter-spacing="1"
+            fill="url(#metalGrad)" filter="url(#sh)">RUTA</text>
+      <text x="120" y="36" font-family="'Bebas Neue', Arial, sans-serif"
+            font-size="38" font-style="italic"
+            fill="url(#redGrad)" filter="url(#sh)">10</text>
+      <rect x="0" y="40" width="220" height="2" fill="#E02020" rx="1"/>
+      <text x="100" y="53" font-family="'DM Sans', Arial, sans-serif"
+            font-size="9" letter-spacing="2" fill="#bbbbbb"
+            text-anchor="middle">CASCOS · ACCESORIOS · EQUIPO</text>
+    </svg>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#inicio">Inicio</a></li>
+    <li><a href="index.html#all-products">Productos</a></li>
+    <li><a href="index.html#mas-vendidos">Ofertas</a></li>
+    <li><a href="garantias.html">Garantías</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div class="btn-icon" onclick="toggleCart()" title="Carrito">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span class="cart-count" id="cartCount">0</span>
+    </div>
+    <a href="index.html" class="btn-login" style="text-decoration:none;">← Tienda</a>
+    <button class="btn-theme" onclick="toggleTheme()"><span id="themeIcon">☀️</span></button>
+  </div>
+</nav>
+
+<!-- ============================================================
+  CONTENIDO PRINCIPAL
+============================================================ -->
+<div class="pd-wrapper">
+
+  <!-- MIGA DE PAN -->
+  <div class="breadcrumb" id="breadcrumb">
+    <a href="index.html">Inicio</a> ›
+    <a href="index.html#mas-vendidos" id="bcCat">Cascos</a> ›
+    <span id="bcName">Cargando…</span>
+  </div>
+
+  <!-- LAYOUT PRINCIPAL -->
+  <div class="pd-main">
+
+    <!-- GALERÍA -->
+    <div class="pd-gallery">
+      <div class="pd-main-img" id="pdMainImg">
+        <div id="pdMainEmoji" style="font-size:9rem;">🪖</div>
+        <div class="pd-badge-overlay badge-hot" id="pdBadge" style="display:none;"></div>
+      </div>
+      <div class="pd-thumbs" id="pdThumbs">
+        <!-- Se generan dinámicamente -->
+      </div>
+    </div>
+
+    <!-- INFO -->
+    <div class="pd-info">
+      <div class="pd-brand-row">
+        <div class="pd-brand" id="pdBrand">—</div>
+        <button class="pd-share" onclick="shareProduct()">🔗 Compartir</button>
+      </div>
+      <div class="pd-name" id="pdName">Cargando producto…</div>
+      <div class="pd-stars">
+        <div class="pd-stars-icons" id="pdStars">★★★★★</div>
+        <div class="pd-stars-count" id="pdReviews">(<a href="#tab-resenas">0 reseñas</a>)</div>
+      </div>
+      <div class="pd-price-row">
+        <div class="pd-price" id="pdPrice">$0</div>
+        <div class="pd-old-price" id="pdOldPrice" style="display:none;"></div>
+        <div class="pd-discount" id="pdDiscount" style="display:none;"></div>
+      </div>
+      <div class="pd-iva">* Precio incluye IVA</div>
+
+      <div class="pd-divider"></div>
+
+      <!-- TALLAS -->
+      <div id="pdSizesSection" style="display:none;">
+        <div class="pd-option-label">
+          <strong>Talla: <span id="pdSelectedSize" style="color:var(--red);">— Selecciona</span></strong>
+          <a href="Imagenes/guia de tallas.jpg">📏 Guía de tallas</a>
+        </div>
+        <div class="pd-sizes" id="pdSizes"></div>
+        <div class="pd-divider"></div>
+      </div>
+
+      <!-- COLORES -->
+      <div id="pdColorsSection" style="display:none;">
+        <div class="pd-option-label">
+          <strong>Color: <span id="pdSelectedColor" style="color:var(--red);">— Selecciona</span></strong>
+        </div>
+        <div class="pd-colors" id="pdColors"></div>
+        <div class="pd-divider"></div>
+      </div>
+
+      <!-- CANTIDAD -->
+      <div class="pd-qty-row">
+        <span class="pd-qty-label">Cantidad:</span>
+        <div class="pd-qty-control">
+          <button class="pd-qty-btn" onclick="changeDetailQty(-1)">−</button>
+          <div class="pd-qty-num" id="pdQty">1</div>
+          <button class="pd-qty-btn" onclick="changeDetailQty(1)">+</button>
+        </div>
+      </div>
+
+      <!-- BOTONES -->
+      <div class="pd-actions">
+        <button class="pd-btn-cart" onclick="addFromDetail()">
+          🛒 Agregar al carrito
+        </button>
+        <button class="pd-btn-fav" onclick="toggleFav(this)">
+          🤍 Agregar a favoritos
+        </button>
+      </div>
+
+      <!-- PERKS -->
+      <div class="pd-perks">
+        <div class="pd-perk"><span>🚚</span> Envío gratis en compras mayores a $1.500.000</div>
+        <div class="pd-perk"><span>🛡️</span> Garantía de 6 meses en cascos · 3 meses en accesorios</div>
+        <div class="pd-perk"><span>↩️</span> Cambios dentro de los 5 días hábiles</div>
+        <div class="pd-perk"><span>🔒</span> Pago 100% seguro</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TABS DE DESCRIPCIÓN ── -->
+  <div class="pd-tabs">
+    <div class="pd-tab-btns">
+      <button class="pd-tab-btn active" onclick="switchTab('descripcion', this)">Descripción</button>
+      <button class="pd-tab-btn"        onclick="switchTab('especificaciones', this)">Especificaciones</button>
+      <button class="pd-tab-btn"        onclick="switchTab('resenas', this)" id="tab-resenas">Reseñas</button>
+      <button class="pd-tab-btn"        onclick="switchTab('garantia', this)">Garantía</button>
+    </div>
+
+    <!-- Descripción -->
+    <div class="pd-tab-content active" id="tab-descripcion">
+      <div class="pd-desc" id="pdDescContent">
+        <p>Cargando descripción…</p>
+      </div>
+    </div>
+
+    <!-- Especificaciones -->
+    <div class="pd-tab-content" id="tab-especificaciones">
+      <table class="pd-specs" id="pdSpecsTable">
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Reseñas -->
+    <div class="pd-tab-content" id="tab-resenas">
+      <div id="pdResenasContent">
+        <p style="color:var(--muted); font-size:0.9rem;">
+          Aún no hay reseñas para este producto. ¡Sé el primero en opinar!
+        </p>
+      </div>
+    </div>
+
+    <!-- Garantía -->
+    <div class="pd-tab-content" id="tab-garantia">
+      <div class="pd-desc">
+        <p>Este producto cuenta con garantía de acuerdo a su categoría:</p>
+        <ul>
+          <li><strong>Cascos:</strong> 6 meses por defectos de fabricación.</li>
+          <li><strong>Textiles, guantes y accesorios:</strong> 3 meses.</li>
+        </ul>
+        <p>La garantía cubre defectos de fabricación detectados bajo condiciones normales de uso. No cubre daños por mal uso, caídas, modificaciones o desgaste natural.</p>
+        <p>Para hacer válida tu garantía contáctanos por WhatsApp o correo electrónico. <a href="garantias.html" style="color:var(--red);">Ver política completa →</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PRODUCTOS RELACIONADOS ── -->
+  <div class="pd-related">
+    <div class="section-header">
+      <h2 class="section-title">TAMBIÉN TE PUEDE <span>GUSTAR</span></h2>
+    </div>
+    <div class="pd-related-grid" id="pdRelatedGrid"></div>
+  </div>
+
+</div>
+
+<!-- CARRITO -->
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header">
+    <h3>🛒 CARRITO</h3>
+    <button class="btn-icon" onclick="toggleCart()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="18" y1="6"  x2="6"  y2="18"/>
+        <line x1="6"  y1="6"  x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <div style="font-size:3rem;">🛒</div>
+      <p style="text-align:center;">Tu carrito está vacío.</p>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cartTotal" style="color:var(--red);">$0</span></div>
+    <button class="btn-checkout" onclick="checkout()">Finalizar compra</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastIcon">✅</span><span id="toastMsg"></span></div>
+
+<script>
+/* ============================================================
+   DATOS DE PRODUCTOS
+   Deben coincidir con los que tienes en script.js de index.html.
+   PARA AGREGAR DESCRIPCIÓN y ESPECIFICACIONES: agrega los campos
+   "desc" y "specs" al objeto del producto aquí abajo.
+============================================================ */
+const ALL_PRODUCTS_DETAIL = [
+  {
+    id: 1, name: 'Casco Integral HRO 506', brand: 'HRO',
+    price: 300000, oldPrice: null, cat: 'cascos', icon: '🪖', badge: 'hot', stars: 5, reviews: 128,
+    imgs: ['imagenes/productos/Casco HRO 506 Negro visor rojo.jpg','imagenes/productos/Casco HRO 506 Blanco visor Azul.jpg','imagenes/productos/Casco HRO 506 Gris Visor Azul.jpg'], // agrega rutas de imágenes: ['Imagenes/agv1.jpg','Imagenes/agv2.jpg']
+    sizes: [{s:'XS',out:false},{s:'S',out:false},{s:'M',out:false},{s:'L',out:true},{s:'XL',out:false}],
+    colors: ['Negro Mate','Blanco Brillante','Gris Brillante'],
+    desc: `<p>El AGV K6 S es el casco integral más ligero y aerodinámico de la gama AGV. Diseñado para el piloto más exigente, combina tecnología de competición con comodidad en carretera.</p>
+           <ul>
+             <li>Casco integral certificado ECE 22.06</li>
+             <li>Carcasa en fibra de carbono y fibra de vidrio</li>
+             <li>Sistema de ventilación optimizado con canales internos</li>
+             <li>Visor Pinlock MaxVision incluido antiempañante</li>
+             <li>Interior extraíble y lavable en Shalimar 3D</li>
+             <li>Sistema de apertura de emergencia IVS</li>
+           </ul>`,
+    specs: [
+      ['Certificación','ECE 22.06 / DOT'],
+      ['Material carcasa','Fibra de carbono + Fibra de vidrio'],
+      ['Peso','~1.420 g (talla M)'],
+      ['Visera','Antirrayaduras y antiUV'],
+      ['Pinlock','MaxVision incluido'],
+      ['Ventilación','Sistema de 5 entradas y 3 salidas'],
+      ['Interior','Extraíble y lavable'],
+      ['Tallas disponibles','XS · S · M · L · XL'],
+    ]
+  },
+  {
+    id: 2, name: 'Casco Modular Shoei Neotec 3', brand: 'Shoei',
+    price: 1350000, oldPrice: null, cat: 'cascos', icon: '🪖', badge: 'new', stars: 5, reviews: 89,
+    imgs: [], sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:true}], colors: [],
+    desc: `<p>El Shoei Neotec 3 es el casco modular de referencia para el turismo de alta gama. Sistema abatible con una sola mano, aerodinámica silenciosa y comfort excepcional.</p>
+           <ul>
+             <li>Sistema abatible de una sola mano Shoei</li>
+             <li>Doble homologación: integral y abierto (ECE 22.06)</li>
+             <li>Visera solar interna integrada</li>
+             <li>Interior 3D con espuma de memoria</li>
+           </ul>`,
+    specs: [
+      ['Certificación','ECE 22.06 (P/J)'],
+      ['Material carcasa','AIM+ (fibra de vidrio reforzada)'],
+      ['Peso','~1.850 g (talla M)'],
+      ['Visera solar','Integrada con accionador lateral'],
+      ['Interior','Extraíble y lavable'],
+      ['Tallas disponibles','S · M · L · XL'],
+    ]
+  },
+  {
+    id: 3, name: 'Guantes Alpinestars GP Pro R3', brand: 'Alpinestars',
+    price: 280000, oldPrice: 350000, cat: 'guantes', icon: '🧤', badge: 'sale', stars: 4, reviews: 203,
+    imgs: [], sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:true},{s:'XL',out:false}],
+    colors: ['Negro/Rojo','Negro/Blanco','Gris/Amarillo'],
+    desc: `<p>Los Alpinestars GP Pro R3 son guantes de pista de alta protección pensados para el motociclista que exige rendimiento al máximo nivel.</p>
+           <ul><li>Palma en cuero de vaca perforado</li><li>Protección de nudillos rígida Nucleon</li><li>Inserto de espuma de memoria en palma</li></ul>`,
+    specs: [['Certificación','CE Nivel 2'],['Material','Cuero de vaca + Microfibra'],['Protección nudillos','Nucleon rígida'],['Tallas','S · M · L · XL']]
+  },
+  {
+    id: 4, name: 'Chaqueta Dainese Veloce D-Dry', brand: 'Dainese',
+    price: 720000, oldPrice: null, cat: 'chaquetas', icon: '🧥', badge: 'new', stars: 5, reviews: 57,
+    imgs: [], sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false},{s:'XXL',out:true}],
+    colors: ['Negro','Gris Oscuro'],
+    desc: `<p>Chaqueta textil de alto rendimiento con membrana D-Dry impermeable y transpirable. Protección certificada CE en hombros y codos.</p>`,
+    specs: [['Certificación','CE Nivel 1'],['Membrana','D-Dry impermeable'],['Protecciones','Hombros y codos incluidas'],['Espalda','Preparada para Dainese Pro-Armor']]
+  },
+  {
+    id: 5, name: 'Casco Arai RX-7V Evo', brand: 'Arai',
+    price: 2100000, oldPrice: null, cat: 'cascos', icon: '🪖', badge: null, stars: 5, reviews: 44,
+    imgs: [], sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false}],
+    colors: ['Iridium Morado Humo Claro','Iridium Rojo Humo Claro','Humo Claro Iridium Azul'],
+    desc: `<p>El Arai RX-7V Evo es el casco de pista definitivo. Fabricado artesanalmente con la filosofía Arai de seguridad superior.</p>`,
+    specs: [['Certificación','ECE 22.06 / FIM'],['Material','Super Fiber compuesto'],['Peso','~1.350 g'],['Ventilación','VAS (Variable Axis System)']]
+  },
+  {
+    id: 6, name: 'Botas Sidi Canyon Gore-Tex', brand: 'Sidi',
+    price: 490000, oldPrice: 620000, cat: 'botas', icon: '👢', badge: 'sale', stars: 4, reviews: 76,
+    imgs: [], sizes: [{s:'39',out:false},{s:'40',out:false},{s:'41',out:true},{s:'42',out:false},{s:'43',out:false},{s:'44',out:false}],
+    colors: [],
+    desc: `<p>Botas adventure con membrana Gore-Tex para impermeabilidad total. Suela Michelin de alto agarre y tobillera reforzada.</p>`,
+    specs: [['Membrana','Gore-Tex'],['Suela','Michelin'],['Tobillera','Reforzada con plástico termoplástico'],['Tallas','39 al 44']]
+  },
+  {
+    id: 7, name: 'Intercomunicador Sena 50S', brand: 'Sena',
+    price: 680000, oldPrice: null, cat: 'accesorios', icon: '📡', badge: 'hot', stars: 5, reviews: 312,
+    imgs: [], sizes: [], colors: ['Negro','Gris Plata'],
+    desc: `<p>El Sena 50S es el intercomunicador más avanzado de Sena, con tecnología mesh 4.1 y Bluetooth 5.0 para conectar hasta 24 pilotos simultáneamente.</p>`,
+    specs: [['Bluetooth','5.0'],['Mesh','4.1 Gen 2'],['Pilotos simultáneos','Hasta 24'],['Alcance','Hasta 2 km'],['Batería','~13 horas']]
+  },
+  {
+    id: 8, name: 'Casco LS2 FF900 Valiant II', brand: 'LS2',
+    price: 430000, oldPrice: 520000, cat: 'cascos', icon: '🪖', badge: 'sale', stars: 4, reviews: 95,
+    imgs: [],
+    sizes: [{s:'XS',out:false},{s:'S',out:false},{s:'M',out:true},{s:'L',out:false},{s:'XL',out:false}],
+    colors: ['Blanco Brillante','Negro Mate','Azul Titanio'],
+    desc: `<p>El LS2 FF900 Valiant II combina lo mejor de un casco integral con la versatilidad de un abatible. Carcasa en fibra de vidrio kinetic polymer alloy.</p>`,
+    specs: [['Certificación','ECE 22.06'],['Material','Kinetic Polymer Alloy (KPA)'],['Sistema','Abatible doble homologación'],['Visera solar','Integrada']]
+  },
+];
+
+/* ============================================================
+   ESTADO
+============================================================ */
+let cart          = JSON.parse(localStorage.getItem('ruta10_cart') || '[]');
+let currentProdId = null;
+let detailQty     = 1;
+
+/* ============================================================
+   CARGA DEL PRODUCTO DESDE LA URL
+   Uso: producto.html?id=1
+   Si no hay id en la URL muestra el primer producto.
+============================================================ */
+function getProductFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const id     = parseInt(params.get('id'));
+  return ALL_PRODUCTS_DETAIL.find(p => p.id === id) || ALL_PRODUCTS_DETAIL[0];
+}
+
+function loadProduct() {
+  const p = getProductFromURL();
+  currentProdId = p.id;
+
+  // Título de la pestaña
+  document.title = `${p.name} — Ruta 10`;
+
+  // Miga de pan
+  document.getElementById('bcCat').textContent  = p.cat.charAt(0).toUpperCase() + p.cat.slice(1);
+  document.getElementById('bcCat').href         = `index.html#mas-vendidos`;
+  document.getElementById('bcName').textContent = p.name;
+
+  // Marca y nombre
+  document.getElementById('pdBrand').textContent = p.brand;
+  document.getElementById('pdName').textContent  = p.name;
+
+  // Estrellas
+  document.getElementById('pdStars').textContent  = '★'.repeat(p.stars) + '☆'.repeat(5 - p.stars);
+  document.getElementById('pdReviews').innerHTML  = `(<a href="#tab-resenas" onclick="switchTabById('resenas')">${p.reviews} reseñas</a>)`;
+
+  // Precio
+  document.getElementById('pdPrice').textContent = '$' + p.price.toLocaleString('es-CO');
+  if (p.oldPrice) {
+    document.getElementById('pdOldPrice').textContent  = '$' + p.oldPrice.toLocaleString('es-CO');
+    document.getElementById('pdOldPrice').style.display = '';
+    const pct = Math.round((1 - p.price / p.oldPrice) * 100);
+    document.getElementById('pdDiscount').textContent  = `-${pct}%`;
+    document.getElementById('pdDiscount').style.display = '';
+  }
+
+  // Badge
+  if (p.badge) {
+    const badgeMap = { hot: '🔥 Popular', new: '✨ Nuevo', sale: '🏷️ Oferta' };
+    const el = document.getElementById('pdBadge');
+    el.textContent = badgeMap[p.badge];
+    el.className   = `pd-badge-overlay badge-${p.badge}`;
+    el.style.display = '';
+  }
+
+  // Imagen principal (emoji o imagen real)
+  const mainImg = document.getElementById('pdMainImg');
+  if (p.imgs && p.imgs.length > 0) {
+    document.getElementById('pdMainEmoji').style.display = 'none';
+    const img = document.createElement('img');
+    img.src = p.imgs[0]; img.alt = p.name;
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain;';
+    mainImg.appendChild(img);
+    // Miniaturas
+    renderThumbs(p.imgs, p.icon);
+  } else {
+    document.getElementById('pdMainEmoji').textContent = p.icon;
+    renderThumbs([], p.icon);
+  }
+
+  // Tallas
+  if (p.sizes && p.sizes.length > 0) {
+    document.getElementById('pdSizesSection').style.display = '';
+    document.getElementById('pdSizes').innerHTML = p.sizes.map(s => `
+      <button class="pd-size-btn ${s.out ? 'agotado' : ''}"
+              onclick="selectSize(this,'${s.s}')"
+              ${s.out ? 'disabled title="Agotado"' : ''}>
+        ${s.s}
+      </button>`).join('');
+  }
+
+  // Colores
+  if (p.colors && p.colors.length > 0) {
+    document.getElementById('pdColorsSection').style.display = '';
+    document.getElementById('pdColors').innerHTML = p.colors.map(c => `
+      <button class="pd-color-btn" onclick="selectColor(this,'${c}')">${c}</button>`
+    ).join('');
+  }
+
+  // Descripción
+  document.getElementById('pdDescContent').innerHTML = p.desc || '<p>Sin descripción disponible.</p>';
+
+  // Especificaciones
+  if (p.specs && p.specs.length) {
+    document.querySelector('#tab-especificaciones tbody').innerHTML =
+      p.specs.map(([k,v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+  }
+
+  // Productos relacionados (misma categoría)
+  renderRelated(p);
+}
+
+/* ── MINIATURAS ── */
+function renderThumbs(imgs, icon) {
+  const wrap = document.getElementById('pdThumbs');
+  if (!imgs.length) {
+    // Muestra 3 miniaturas con el emoji
+    wrap.innerHTML = [1,2,3].map((_, i) => `
+      <div class="pd-thumb active" onclick="selectThumb(this, null)">
+        <span style="font-size:1.8rem;">${icon}</span>
+      </div>`).join('');
+    return;
+  }
+  wrap.innerHTML = imgs.map((src, i) => `
+    <div class="pd-thumb ${i===0?'active':''}" onclick="selectThumb(this,'${src}')">
+      <img src="${src}" alt="Vista ${i+1}">
+    </div>`).join('');
+}
+
+function selectThumb(el, src) {
+  document.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  if (src) {
+    document.querySelector('#pdMainImg img').src = src;
+  }
+}
+
+/* ── SELECCIÓN DE TALLA Y COLOR ── */
+function selectSize(el, size) {
+  document.querySelectorAll('.pd-size-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('pdSelectedSize').textContent = size;
+}
+
+function selectColor(el, color) {
+  document.querySelectorAll('.pd-color-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('pdSelectedColor').textContent = color;
+}
+
+/* ── CANTIDAD ── */
+function changeDetailQty(delta) {
+  detailQty = Math.max(1, detailQty + delta);
+  document.getElementById('pdQty').textContent = detailQty;
+}
+
+/* ── AGREGAR AL CARRITO ── */
+function addFromDetail() {
+  const p = ALL_PRODUCTS_DETAIL.find(x => x.id === currentProdId);
+  if (!p) return;
+
+  // Valida talla si el producto tiene tallas
+  if (p.sizes && p.sizes.length > 0) {
+    const selSize = document.querySelector('.pd-size-btn.active');
+    if (!selSize) { showToast('⚠️', 'Selecciona una talla antes de agregar'); return; }
+  }
+  // Valida color si tiene colores
+  if (p.colors && p.colors.length > 0) {
+    const selColor = document.querySelector('.pd-color-btn.active');
+    if (!selColor) { showToast('⚠️', 'Selecciona un color antes de agregar'); return; }
+  }
+
+  // Agrega al carrito según cantidad
+  for (let i = 0; i < detailQty; i++) {
+    const existing = cart.find(item => item.id === currentProdId);
+    if (existing) existing.qty++;
+    else cart.push({ id: currentProdId, qty: 1 });
+  }
+  saveCart();
+  updateCartCount();
+  showToast('✅', `${p.name} agregado al carrito`);
+  // Abre el panel del carrito
+  document.getElementById('cartPanel').classList.add('open');
+  renderCart();
+}
+
+/* ── FAVORITOS ── */
+function toggleFav(btn) {
+  const isFav = btn.textContent.includes('🤍');
+  btn.textContent = isFav ? '❤️ En favoritos' : '🤍 Agregar a favoritos';
+  showToast(isFav ? '❤️' : '💔', isFav ? 'Guardado en favoritos' : 'Quitado de favoritos');
+}
+
+/* ── COMPARTIR ── */
+function shareProduct() {
+  if (navigator.share) {
+    navigator.share({ title: document.title, url: window.location.href });
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    showToast('🔗', 'Enlace copiado al portapapeles');
+  }
+}
+
+/* ── TABS DE DESCRIPCIÓN ── */
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.pd-tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pd-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  btn.classList.add('active');
+}
+function switchTabById(tabId) {
+  const btn = document.querySelector(`.pd-tab-btn[onclick*="${tabId}"]`);
+  if (btn) switchTab(tabId, btn);
+}
+
+/* ── PRODUCTOS RELACIONADOS ── */
+function renderRelated(current) {
+  const related = ALL_PRODUCTS_DETAIL
+    .filter(p => p.cat === current.cat && p.id !== current.id)
+    .slice(0, 4);
+
+  if (!related.length) {
+    document.querySelector('.pd-related').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('pdRelatedGrid').innerHTML = related.map(p => {
+    const oldHtml = p.oldPrice ? `<s style="color:var(--muted);font-size:0.78rem;">$${p.oldPrice.toLocaleString('es-CO')}</s>` : '';
+    const stars   = '★'.repeat(p.stars) + '☆'.repeat(5 - p.stars);
+    return `
+      <div class="product-card" onclick="window.location.href='producto.html?id=${p.id}'" style="cursor:pointer;">
+        <div class="product-img"><div class="product-img-emoji">${p.icon}</div></div>
+        <div class="product-info">
+          <div class="product-brand">${p.brand}</div>
+          <div class="product-name">${p.name}</div>
+          <div class="product-stars" style="font-size:0.8rem;">${stars}</div>
+          <div class="product-footer">
+            <div class="product-price">$${p.price.toLocaleString('es-CO')} ${oldHtml}</div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ── CARRITO ── */
+function saveCart() { localStorage.setItem('ruta10_cart', JSON.stringify(cart)); }
+
+function updateCartCount() {
+  document.getElementById('cartCount').textContent = cart.reduce((s, i) => s + i.qty, 0);
+}
+
+function renderCart() {
+  const container = document.getElementById('cartItems');
+  const empty     = document.getElementById('cartEmpty');
+  if (!cart.length) { empty.style.display = 'flex'; document.getElementById('cartTotal').textContent = '$0'; return; }
+  empty.style.display = 'none';
+  let total = 0;
+  container.innerHTML = '<div class="cart-empty" id="cartEmpty" style="display:none;"></div>' +
+    cart.map(item => {
+      const p = ALL_PRODUCTS_DETAIL.find(x => x.id === item.id);
+      if (!p) return '';
+      total += p.price * item.qty;
+      return `<div class="cart-item">
+        <div class="cart-item-img">${p.icon}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${p.name}</div>
+          <div class="cart-item-price">$${p.price.toLocaleString('es-CO')}</div>
+          <div class="cart-item-qty">
+            <button class="qty-btn" onclick="chQty(${p.id},-1)">−</button>
+            <span>${item.qty}</span>
+            <button class="qty-btn" onclick="chQty(${p.id},1)">+</button>
+          </div>
+        </div>
+        <button class="cart-item-remove" onclick="removeCart(${p.id})">×</button>
+      </div>`;
+    }).join('');
+  document.getElementById('cartTotal').textContent = '$' + total.toLocaleString('es-CO');
+}
+
+function chQty(id, d) {
+  const item = cart.find(i => i.id === id);
+  if (!item) return;
+  item.qty = Math.max(1, item.qty + d);
+  saveCart(); renderCart(); updateCartCount();
+}
+function removeCart(id) {
+  cart = cart.filter(i => i.id !== id);
+  saveCart(); updateCartCount(); renderCart();
+}
+function toggleCart() {
+  document.getElementById('cartPanel').classList.toggle('open');
+  renderCart();
+}
+function checkout() {
+  if (!cart.length) { showToast('⚠️','Carrito vacío'); return; }
+  showToast('🎉','¡Gracias! Procesando…');
+  cart = []; saveCart(); updateCartCount(); renderCart();
+  setTimeout(() => document.getElementById('cartPanel').classList.remove('open'), 1500);
+}
+updateCartCount();
+
+/* ── TOAST ── */
+function showToast(icon, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastMsg').textContent  = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ── TEMA ── */
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light-mode');
+  document.getElementById('themeIcon').textContent = isLight ? '🌙' : '☀️';
+  localStorage.setItem('ruta10_theme', isLight ? 'light' : 'dark');
+}
+(function() {
+  if (localStorage.getItem('ruta10_theme') === 'light') {
+    document.body.classList.add('light-mode');
+    const icon = document.getElementById('themeIcon');
+    if (icon) icon.textContent = '🌙';
+  }
+})();
+
+/* ── INICIO ── */
+loadProduct();
+</script>
+</body>
+</html>

@@ -121,10 +121,14 @@ function renderCard(p) {
   // Botón: deshabilitado si está agotado
   const btnHtml = isAgotado
     ? `<button class="btn-cart btn-agotado" disabled>Sin stock</button>`
-    : `<button class="btn-cart" onclick="openProductModal(${p.id})">+ Agregar</button>`;
+    : `<div style="display:flex;gap:6px;align-items:center;">
+  <button class="btn-cart" onclick="event.stopPropagation(); openProductModal(${p.id})">+ Agregar</button>
+</div>`;
 
   return `
-    <div class="product-card ${isAgotado ? 'card-agotado' : ''}" data-cat="${p.cat}" id="product-${p.id}">
+    <div class="product-card ${isAgotado ? 'card-agotado' : ''}" data-cat="${p.cat}" id="product-${p.id}"
+         style="cursor:pointer;"
+         onclick="window.location.href='producto.html?id=${p.id}'">
       <div class="product-img">${imgHtml}</div>
       ${badgeHtml}
       <div class="product-info">
@@ -142,68 +146,75 @@ function renderCard(p) {
 }
 
 function renderGrids() {
-  document.getElementById('productsGrid').innerHTML    = PRODUCTS.map(renderCard).join('');
-  document.getElementById('newGrid').innerHTML         = NEW_PRODUCTS.map(renderCard).join('');
-  document.getElementById('allProductsGrid').innerHTML = ALL_PRODUCTS.map(renderCard).join('');
+  document.getElementById('productsGrid').innerHTML = PRODUCTS.map(renderCard).join('');
+  document.getElementById('newGrid').innerHTML      = NEW_PRODUCTS.map(renderCard).join('');
+  renderAllProductsPaged(1);
   applyFilter(activeFilter);
+}
 
-  function renderAllProductsPaged(page) {
-  currentPageAll   = page;
-  const total      = ALL_PRODUCTS.length;
-  const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
-  const start      = (page - 1) * ITEMS_PER_PAGE;
-  const end        = Math.min(start + ITEMS_PER_PAGE, total);
-  const pageItems  = ALL_PRODUCTS.slice(start, end);
+/* ============================================================
+   PAGINADO — SECCIÓN "TODOS LOS PRODUCTOS"
+   20 productos por página. Cambia ITEMS_PER_PAGE para ajustar.
+   ============================================================ */
+const ITEMS_PER_PAGE = 20;
+let   currentPageAll = 1;
 
-  const grid = document.getElementById('allProductsGrid');
-  if (!grid) return;
-
-  // Elimina paginación vieja ANTES de redibujar
+function renderAllProductsPaged(page) {
+  const grid    = document.getElementById('allProductsGrid');
   const section = document.getElementById('all-products');
+  if (!grid || !section) return;
+
+  const total      = ALL_PRODUCTS.length;
+  const totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
+  const safePage   = Math.min(Math.max(page, 1), totalPages);
+  const start      = (safePage - 1) * ITEMS_PER_PAGE;
+  const end        = Math.min(start + ITEMS_PER_PAGE, total);
+  currentPageAll   = safePage;
+
+  // Elimina paginación anterior
   section.querySelectorAll('.pagination').forEach(el => el.remove());
 
-  // Inyecta las tarjetas de la página actual
-  grid.innerHTML = pageItems.map(renderCard).join('');
+  // Inyecta tarjetas de la página actual
+  grid.innerHTML = ALL_PRODUCTS.slice(start, end).map(renderCard).join('');
 
-  // Construye botones de paginación
-  let html = '<div class="pagination">';
+  // Sin paginación si solo hay 1 página
+  if (totalPages <= 1) return;
 
-  html += `<button class="page-btn" onclick="renderAllProductsPaged(${page - 1})"
-    ${page === 1 ? 'disabled' : ''}>‹ Anterior</button>`;
+  // Construye botones
+  const r1  = Math.max(1, safePage - 2);
+  const r2  = Math.min(totalPages, safePage + 2);
+  let   btn = '<div class="pagination">';
 
-  const rangeStart = Math.max(1, page - 2);
-  const rangeEnd   = Math.min(totalPages, page + 2);
+  btn += `<button class="page-btn" onclick="renderAllProductsPaged(${safePage - 1})"
+           ${safePage === 1 ? 'disabled' : ''}>‹ Anterior</button>`;
 
-  if (rangeStart > 1) {
-    html += `<button class="page-btn" onclick="renderAllProductsPaged(1)">1</button>`;
-    if (rangeStart > 2) html += `<span class="page-dots">…</span>`;
+  if (r1 > 1) {
+    btn += `<button class="page-btn" onclick="renderAllProductsPaged(1)">1</button>`;
+    if (r1 > 2) btn += `<span class="page-dots">…</span>`;
   }
 
-  for (let i = rangeStart; i <= rangeEnd; i++) {
-    html += `<button class="page-btn ${i === page ? 'active' : ''}"
-      onclick="renderAllProductsPaged(${i})">${i}</button>`;
+  for (let i = r1; i <= r2; i++) {
+    btn += `<button class="page-btn ${i === safePage ? 'active' : ''}"
+             onclick="renderAllProductsPaged(${i})">${i}</button>`;
   }
 
-  if (rangeEnd < totalPages) {
-    if (rangeEnd < totalPages - 1) html += `<span class="page-dots">…</span>`;
-    html += `<button class="page-btn" onclick="renderAllProductsPaged(${totalPages})">${totalPages}</button>`;
+  if (r2 < totalPages) {
+    if (r2 < totalPages - 1) btn += `<span class="page-dots">…</span>`;
+    btn += `<button class="page-btn" onclick="renderAllProductsPaged(${totalPages})">${totalPages}</button>`;
   }
 
-  html += `<button class="page-btn" onclick="renderAllProductsPaged(${page + 1})"
-    ${page === totalPages ? 'disabled' : ''}>Siguiente ›</button>`;
+  btn += `<button class="page-btn" onclick="renderAllProductsPaged(${safePage + 1})"
+           ${safePage === totalPages ? 'disabled' : ''}>Siguiente ›</button>`;
 
-  html += `<span class="page-info">Mostrando ${start + 1}–${end} de ${total} productos</span>`;
-  html += '</div>';
+  btn += `<span class="page-info">Mostrando ${start + 1}–${end} de ${total} productos</span>`;
+  btn += '</div>';
 
-  // Inserta la paginación después de la grilla
-  grid.insertAdjacentHTML('afterend', html);
+  grid.insertAdjacentHTML('afterend', btn);
 
-  // Scroll al inicio de la sección (excepto en la primera carga)
-  if (page !== 1 || currentPageAll !== 1) {
-    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  // Scroll solo al cambiar de página (no en la carga inicial)
+  if (page > 1) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-}
+
 renderGrids();
 
 

@@ -1386,3 +1386,310 @@ body.light-mode .pm-option.selected { color: #fff; }
   opacity: 0.7;
 }
 .btn-agotado:hover { opacity: 0.7 !important; }
+
+/* ============================================================
+   RESPONSIVE MÓVIL COMPLETO
+   Inspirado en diseño de tiendas tipo ZonaBiker:
+   2 columnas de productos, navbar con hamburguesa,
+   tarjetas compactas y buscador adaptado.
+============================================================ */
+
+/* ── NAVBAR MÓVIL ── */
+@media (max-width: 768px) {
+
+  nav {
+    padding: 0 1rem;
+    height: 56px;
+    gap: 0.5rem;
+  }
+
+  /* Logo más pequeño */
+  .logo-svg svg { width: 130px !important; height: 38px !important; }
+
+  /* Oculta buscador, links, botón categorías y texto "Ingresar" */
+  .search-bar      { display: none; }
+  .nav-links       { display: none; }
+  .nav-cat-btn     { display: none; }
+  .btn-login       { display: none; }
+
+  /* Acciones derechas solo muestran carrito, cuenta y tema */
+  .nav-actions {
+    gap: 0.4rem;
+    margin-left: auto;
+  }
+
+  .btn-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .btn-theme {
+    width: 34px;
+    height: 34px;
+    font-size: 0.9rem;
+  }
+
+  /* Barra de búsqueda separada debajo de la navbar */
+  .search-results-bar {
+    top: 56px;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* ── BUSCADOR FIJO DEBAJO DE LA NAVBAR EN MÓVIL ── */
+@media (max-width: 768px) {
+  /* Barra de búsqueda flotante visible siempre en móvil */
+  body::after {
+    content: '';
+    display: block;
+    height: 56px; /* compensa la navbar fija */
+  }
+
+  /* Buscador flotante móvil */
+  .mobile-search-bar {
+    position: fixed;
+    top: 56px;
+    left: 0; right: 0;
+    z-index: 998;
+    background: var(--darker);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mobile-search-bar input {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 8px 14px;
+    color: var(--text);
+    font-size: 0.85rem;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+  }
+
+  .mobile-search-bar input::placeholder { color: var(--muted); }
+
+  .mobile-search-icon {
+    position: absolute;
+    right: 1.8rem;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .mobile-cat-btn {
+    background: var(--red);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+    padding: 8px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Compensa la barra de búsqueda fija */
+  .banner { margin-top: 100px !important; }
+  .search-results-bar { top: 100px !important; }
+}
+
+/* ── GRILLA DE PRODUCTOS EN MÓVIL — 2 COLUMNAS ── */
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    padding: 0 !important;
+  }
+
+  /* Tarjeta más compacta */
+  .product-card {
+    border-radius: 10px;
+  }
+
+  /* Imagen más pequeña */
+  .product-img {
+    height: 140px !important;
+  }
+
+  .product-img-emoji {
+    font-size: 3.5rem !important;
+  }
+
+  /* Info compacta */
+  .product-info {
+    padding: 0.6rem 0.7rem !important;
+  }
+
+  .product-brand {
+    font-size: 0.68rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .product-name {
+    font-size: 0.8rem !important;
+    margin-bottom: 4px !important;
+    line-height: 1.25 !important;
+    /* Limita a 2 líneas */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .product-stars {
+    font-size: 0.7rem !important;
+    margin-bottom: 6px !important;
+  }
+
+  .product-price {
+    font-size: 0.95rem !important;
+  }
+
+  .product-price s {
+    font-size: 0.72rem !important;
+    display: block;
+  }
+
+  /* Botón más pequeño */
+  .btn-cart {
+    font-size: 0.72rem !important;
+    padding: 6px 8px !important;
+    border-radius: 6px !important;
+  }
+
+  /* Badge más pequeño */
+  .product-badge {
+    font-size: 0.62rem !important;
+    padding: 3px 7px !important;
+  }
+}
+
+/* ── SECCIONES EN MÓVIL ── */
+@media (max-width: 768px) {
+  section { padding: 2rem 1rem !important; }
+
+  .section-header {
+    margin-bottom: 1rem !important;
+  }
+
+  .section-title {
+    font-size: 1.6rem !important;
+  }
+
+  /* Filtros rápidos en scroll horizontal */
+  .quick-filters {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    gap: 6px !important;
+    padding-bottom: 6px !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .quick-filters::-webkit-scrollbar { display: none; }
+
+  .qf-btn {
+    font-size: 0.75rem !important;
+    padding: 5px 10px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Barra de filtro activo */
+  .filter-bar {
+    padding: 0.6rem 1rem !important;
+    font-size: 0.82rem !important;
+  }
+}
+
+/* ── BANNER EN MÓVIL ── */
+@media (max-width: 768px) {
+  .banner { height: 280px !important; }
+
+  .slide-title  { font-size: 1.8rem !important; line-height: 1.1 !important; }
+  .slide-desc   { font-size: 0.78rem !important; margin-bottom: 1rem !important; }
+  .slide-content { left: 5% !important; max-width: 75% !important; }
+  .slide-tag    { font-size: 0.62rem !important; margin-bottom: 0.5rem !important; }
+
+  .btn-slide {
+    padding: 9px 18px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .banner-arrow {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 1.1rem !important;
+  }
+  .banner-arrow.prev { left: 8px !important; }
+  .banner-arrow.next { right: 8px !important; }
+}
+
+/* ── PROMO STRIP EN MÓVIL ── */
+@media (max-width: 768px) {
+  .promo-strip {
+    padding: 2rem 1rem !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+    text-align: center !important;
+  }
+  .promo-text h2 { font-size: 1.6rem !important; }
+  .promo-text p  { font-size: 0.85rem !important; }
+  .promo-cta     { width: 100% !important; }
+}
+
+/* ── FEATURES EN MÓVIL ── */
+@media (max-width: 768px) {
+  .feat-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .feat-item  { padding: 1rem 0.75rem !important; }
+  .feat-icon  { font-size: 1.5rem !important; }
+  .feat-title { font-size: 0.85rem !important; }
+  .feat-desc  { font-size: 0.76rem !important; }
+}
+
+/* ── FOOTER EN MÓVIL ── */
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  .footer-bottom {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    text-align: center !important;
+  }
+}
+
+/* ── CARRITO EN MÓVIL ── */
+@media (max-width: 768px) {
+  .cart-panel { width: 100% !important; }
+}
+
+/* ── PAGINADO EN MÓVIL ── */
+@media (max-width: 768px) {
+  .pagination { gap: 5px !important; padding: 1.5rem 0 !important; }
+  .page-btn   { padding: 6px 10px !important; font-size: 0.8rem !important; min-width: 34px !important; }
+  .page-info  { font-size: 0.75rem !important; }
+}
+
+/* ── MEGA MENÚ EN MÓVIL ── */
+@media (max-width: 768px) {
+  .megamenu {
+    width: 100% !important;
+    border-radius: 0 !important;
+    max-height: 80vh !important;
+  }
+  .megamenu-list { width: 140px !important; }
+  .megamenu-list-item { padding: 10px 10px !important; font-size: 0.8rem !important; }
+  .megamenu-panel { padding: 14px !important; }
+  .megamenu-chip { font-size: 0.75rem !important; padding: 5px 10px !important; }
+}
