@@ -44,6 +44,16 @@ const ALL_PRODUCTS = [
     sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:true}],
     colors: ['Negro Mate','Blanco Brillante','Gris Brillante'] },
 
+{ id: 2,  name: 'Casco Integral Xone 500 GT Negro sólid', brand: 'Xone', price: 240000,  oldPrice: null,
+    cat: 'cascos',    img: 'Imagenes/Productos/casco-xone-500-gt-negro-sólido.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false}],
+    colors: ['Negro Mate'] },
+
+{ id: 3,  name: 'Casco integral ICH 503 Solid', brand: 'ICH', price: 200000,  oldPrice: null,
+    cat: 'cascos',    img: 'Imagenes/Productos/Casco integral ICH 503 Solid.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false}],
+    colors: ['Negro Mate'] },
+
 ];
 
 /* ── PRODUCTOS MÁS VENDIDOS ── */
@@ -93,6 +103,15 @@ const NEW_PRODUCTS = [
     sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:true}],
     colors: ['Negro Mate','Blanco Brillante','Gris Brillante'] },
 
+  { id: 2,  name: 'Casco Integral Xone 500 GT Negro sólid', brand: 'Xone', price: 240000,  oldPrice: null,
+    cat: 'cascos',    img: 'Imagenes/Productos/casco-xone-500-gt-negro-sólido.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false}],
+    colors: ['Negro Mate'] },
+
+  { id: 3,  name: 'Casco integral ICH 503 Solid', brand: 'ICH', price: 200000,  oldPrice: null,
+    cat: 'cascos',    img: 'Imagenes/Productos/Casco integral ICH 503 Solid.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false}],
+    colors: ['Negro Mate'] },
 ];
 
 /* ── ESTADO GLOBAL ── */

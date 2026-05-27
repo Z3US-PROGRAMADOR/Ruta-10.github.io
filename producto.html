@@ -697,10 +697,12 @@ const ALL_PRODUCTS_DETAIL = [
     ]
   },
   {
-    id: 2, name: 'Casco Modular Shoei Neotec 3', brand: 'Shoei',
-    price: 1350000, oldPrice: null, cat: 'cascos', icon: '🪖', badge: 'new', stars: 5, reviews: 89,
-    imgs: [], sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:true}], colors: [],
-    desc: `<p>El Shoei Neotec 3 es el casco modular de referencia para el turismo de alta gama. Sistema abatible con una sola mano, aerodinámica silenciosa y comfort excepcional.</p>
+    id: 2, name: 'Casco Integral Xone 500 GT Negro sólid', brand: 'Xone',
+    price: 240000, oldPrice: null, cat: 'cascos', icon: '🪖', badge: 'hot', stars: 5, reviews: 128,
+    imgs: ['Imagenes/Productos/casco-xone-500-gt-negro-sólido.jpg','Imagenes/Productos/casco-xone-500-gt-negro-sólido-arriba.jpg','Imagenes/Productos/casco-xone-500-gt-negro-sólido-atras.jpg'], 
+    sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false}], 
+    colors: ['Negro Mate'],
+    desc: `<p>El Xone 500 GT es el casco integral de referencia para el turismo de alta gama. Diseñado para ofrecer máxima protección y comodidad en carretera.</p>
            <ul>
              <li>Sistema abatible de una sola mano Shoei</li>
              <li>Doble homologación: integral y abierto (ECE 22.06)</li>
@@ -717,54 +719,28 @@ const ALL_PRODUCTS_DETAIL = [
     ]
   },
   {
-    id: 3, name: 'Guantes Alpinestars GP Pro R3', brand: 'Alpinestars',
-    price: 280000, oldPrice: 350000, cat: 'guantes', icon: '🧤', badge: 'sale', stars: 4, reviews: 203,
-    imgs: [], sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:true},{s:'XL',out:false}],
-    colors: ['Negro/Rojo','Negro/Blanco','Gris/Amarillo'],
-    desc: `<p>Los Alpinestars GP Pro R3 son guantes de pista de alta protección pensados para el motociclista que exige rendimiento al máximo nivel.</p>
-           <ul><li>Palma en cuero de vaca perforado</li><li>Protección de nudillos rígida Nucleon</li><li>Inserto de espuma de memoria en palma</li></ul>`,
-    specs: [['Certificación','CE Nivel 2'],['Material','Cuero de vaca + Microfibra'],['Protección nudillos','Nucleon rígida'],['Tallas','S · M · L · XL']]
+    id: 3, name: 'Casco integral ICH 503 Solid', brand: 'ICH',
+    price: 200000, oldPrice: null, cat: 'cascos', icon: '🪖', badge: 'hot', stars: 5, reviews: 128,
+    imgs: ['Imagenes/Productos/Casco integral ICH 503 Solid.jpg','Imagenes/Productos/Casco integral ICH 503 Solid-atras.jpg','Imagenes/Productos/Casco integral ICH 503 Solid-arriba.jpg'], 
+    sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false}], 
+    colors: ['Negro Mate'],
+    desc: `<p>El Xone 500 GT es el casco integral de referencia para el turismo de alta gama. Diseñado para ofrecer máxima protección y comodidad en carretera.</p>
+           <ul>
+             <li>Sistema abatible de una sola mano Shoei</li>
+             <li>Doble homologación: integral y abierto (ECE 22.06)</li>
+             <li>Visera solar interna integrada</li>
+             <li>Interior 3D con espuma de memoria</li>
+           </ul>`,
+    specs: [
+      ['Certificación','ECE 22.06 (P/J)'],
+      ['Material carcasa','AIM+ (fibra de vidrio reforzada)'],
+      ['Peso','~1.850 g (talla M)'],
+      ['Visera solar','Integrada con accionador lateral'],
+      ['Interior','Extraíble y lavable'],
+      ['Tallas disponibles','S · M · L · XL'],
+    ]
   },
-  {
-    id: 4, name: 'Chaqueta Dainese Veloce D-Dry', brand: 'Dainese',
-    price: 720000, oldPrice: null, cat: 'chaquetas', icon: '🧥', badge: 'new', stars: 5, reviews: 57,
-    imgs: [], sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false},{s:'XXL',out:true}],
-    colors: ['Negro','Gris Oscuro'],
-    desc: `<p>Chaqueta textil de alto rendimiento con membrana D-Dry impermeable y transpirable. Protección certificada CE en hombros y codos.</p>`,
-    specs: [['Certificación','CE Nivel 1'],['Membrana','D-Dry impermeable'],['Protecciones','Hombros y codos incluidas'],['Espalda','Preparada para Dainese Pro-Armor']]
-  },
-  {
-    id: 5, name: 'Casco Arai RX-7V Evo', brand: 'Arai',
-    price: 2100000, oldPrice: null, cat: 'cascos', icon: '🪖', badge: null, stars: 5, reviews: 44,
-    imgs: [], sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false}],
-    colors: ['Iridium Morado Humo Claro','Iridium Rojo Humo Claro','Humo Claro Iridium Azul'],
-    desc: `<p>El Arai RX-7V Evo es el casco de pista definitivo. Fabricado artesanalmente con la filosofía Arai de seguridad superior.</p>`,
-    specs: [['Certificación','ECE 22.06 / FIM'],['Material','Super Fiber compuesto'],['Peso','~1.350 g'],['Ventilación','VAS (Variable Axis System)']]
-  },
-  {
-    id: 6, name: 'Botas Sidi Canyon Gore-Tex', brand: 'Sidi',
-    price: 490000, oldPrice: 620000, cat: 'botas', icon: '👢', badge: 'sale', stars: 4, reviews: 76,
-    imgs: [], sizes: [{s:'39',out:false},{s:'40',out:false},{s:'41',out:true},{s:'42',out:false},{s:'43',out:false},{s:'44',out:false}],
-    colors: [],
-    desc: `<p>Botas adventure con membrana Gore-Tex para impermeabilidad total. Suela Michelin de alto agarre y tobillera reforzada.</p>`,
-    specs: [['Membrana','Gore-Tex'],['Suela','Michelin'],['Tobillera','Reforzada con plástico termoplástico'],['Tallas','39 al 44']]
-  },
-  {
-    id: 7, name: 'Intercomunicador Sena 50S', brand: 'Sena',
-    price: 680000, oldPrice: null, cat: 'accesorios', icon: '📡', badge: 'hot', stars: 5, reviews: 312,
-    imgs: [], sizes: [], colors: ['Negro','Gris Plata'],
-    desc: `<p>El Sena 50S es el intercomunicador más avanzado de Sena, con tecnología mesh 4.1 y Bluetooth 5.0 para conectar hasta 24 pilotos simultáneamente.</p>`,
-    specs: [['Bluetooth','5.0'],['Mesh','4.1 Gen 2'],['Pilotos simultáneos','Hasta 24'],['Alcance','Hasta 2 km'],['Batería','~13 horas']]
-  },
-  {
-    id: 8, name: 'Casco LS2 FF900 Valiant II', brand: 'LS2',
-    price: 430000, oldPrice: 520000, cat: 'cascos', icon: '🪖', badge: 'sale', stars: 4, reviews: 95,
-    imgs: [],
-    sizes: [{s:'XS',out:false},{s:'S',out:false},{s:'M',out:true},{s:'L',out:false},{s:'XL',out:false}],
-    colors: ['Blanco Brillante','Negro Mate','Azul Titanio'],
-    desc: `<p>El LS2 FF900 Valiant II combina lo mejor de un casco integral con la versatilidad de un abatible. Carcasa en fibra de vidrio kinetic polymer alloy.</p>`,
-    specs: [['Certificación','ECE 22.06'],['Material','Kinetic Polymer Alloy (KPA)'],['Sistema','Abatible doble homologación'],['Visera solar','Integrada']]
-  },
+  
 ];
 
 /* ============================================================
