@@ -40,7 +40,7 @@
 
 const ALL_PRODUCTS = [
 { id: 1,  name: 'Casco Integral HRO 506', brand: 'HRO', price: 300000,  oldPrice: null,
-    cat: 'cascos',    img: 'imagenes/Productos/casco-hro-506-negro-visor-rojo.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    cat: 'cascos',    img: 'Imagenes/Productos/casco-hro-506-negro-visor-rojo.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
     sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:true}],
     colors: ['Negro Mate','Blanco Brillante','Gris Brillante'] },
 
@@ -89,7 +89,7 @@ const PRODUCTS = [
 /* ── NUEVOS INGRESOS ── */
 const NEW_PRODUCTS = [
   { id: 1,  name: 'Casco Integral HRO 506', brand: 'HRO', price: 300000,  oldPrice: null,
-    cat: 'cascos',    img: 'imagenes/Productos/casco-hro-506-negro-visor-rojo.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    cat: 'cascos',    img: 'Imagenes/Productos/casco-hro-506-negro-visor-rojo.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
     sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:true}],
     colors: ['Negro Mate','Blanco Brillante','Gris Brillante'] },
 
