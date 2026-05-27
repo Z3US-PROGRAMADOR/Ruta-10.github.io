@@ -889,7 +889,7 @@ function renderThumbs(imgs, icon) {
   }
   wrap.innerHTML = imgs.map((src, i) => `
     <div class="pd-thumb ${i===0?'active':''}" onclick="selectThumb(this,'${src}')">
-      <img src="${src}" alt="Vista ${i+1}">
+      <img src="${src}" alt="" onerror="this.style.display='none'">
     </div>`).join('');
 }
 
