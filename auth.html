@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruta 10 — Mi Cuenta</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ============================================================
+   PÁGINA DE AUTENTICACIÓN — RUTA 10
+============================================================ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--darker);
+  padding: 2rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Fondo decorativo */
+.auth-page::before {
+  content: '';
+  position: fixed;
+  top: -30%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(224,32,32,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.auth-page::after {
+  content: '';
+  position: fixed;
+  bottom: -30%;
+  left: -20%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(224,32,32,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ── TARJETA DE AUTH ── */
+.auth-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 440px;
+  padding: 2.5rem;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+  animation: cardIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes cardIn {
+  from { opacity:0; transform:translateY(24px) scale(0.97); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* ── LOGO ── */
+.auth-logo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.auth-logo a {
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* ── TÍTULO ── */
+.auth-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 0.3rem;
+}
+.auth-subtitle {
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+/* ── TABS ── */
+.auth-tabs {
+  display: flex;
+  background: var(--darker);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 1.75rem;
+  gap: 4px;
+}
+.auth-tab {
+  flex: 1;
+  padding: 9px;
+  text-align: center;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  border-radius: 7px;
+  transition: all 0.2s;
+}
+.auth-tab.active {
+  background: var(--red);
+  color: #fff;
+}
+
+/* ── FORMULARIOS ── */
+.auth-form { display: flex; flex-direction: column; gap: 1rem; }
+
+.form-field { display: flex; flex-direction: column; gap: 5px; }
+.form-field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-field .input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.form-field .input-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--muted);
+  font-size: 1rem;
+  pointer-events: none;
+}
+.form-field input {
+  width: 100%;
+  background: var(--darker);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 14px 11px 38px;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-field input:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(224,32,32,0.1);
+}
+.form-field input.error { border-color: #ff4444; }
+.form-field input.success { border-color: #22c55e; }
+
+/* Mostrar/ocultar contraseña */
+.toggle-pass {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.toggle-pass:hover { color: var(--text); }
+
+/* Mensajes de error/éxito bajo el campo */
+.field-msg {
+  font-size: 0.75rem;
+  margin-top: 3px;
+  display: none;
+}
+.field-msg.error   { color: #ff6b6b; display: block; }
+.field-msg.success { color: #22c55e; display: block; }
+
+/* ── BARRA DE FORTALEZA DE CONTRASEÑA ── */
+.pass-strength { margin-top: 6px; }
+.pass-strength-bar {
+  height: 3px;
+  border-radius: 3px;
+  background: var(--border);
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.pass-strength-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s, background 0.3s;
+  width: 0%;
+}
+.pass-strength-label {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+/* ── OPCIONES DEL FORM ── */
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -0.25rem;
+}
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.83rem;
+  color: var(--muted);
+}
+.form-check input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--red);
+  cursor: pointer;
+  padding: 0;
+  border-radius: 4px;
+}
+.form-link {
+  font-size: 0.83rem;
+  color: var(--red);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.form-link:hover { text-decoration: underline; }
+
+/* ── BOTÓN PRINCIPAL ── */
+.btn-auth {
+  width: 100%;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: 0.3px;
+}
+.btn-auth:hover   { opacity: 0.88; }
+.btn-auth:active  { transform: scale(0.98); }
+.btn-auth:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Spinner dentro del botón */
+.btn-spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: none;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── DIVIDER ── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0.5rem 0;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.auth-divider span {
+  font-size: 0.75rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ── TÉRMINOS ── */
+.auth-terms {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.6;
+}
+.auth-terms a { color: var(--red); text-decoration: none; }
+.auth-terms a:hover { text-decoration: underline; }
+
+/* ── ALERT (mensajes globales) ── */
+.auth-alert {
+  display: none;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+.auth-alert.info    { background: rgba(59,130,246,0.12); border:1px solid rgba(59,130,246,0.3); color:#93c5fd; }
+.auth-alert.success { background: rgba(34,197,94,0.12);  border:1px solid rgba(34,197,94,0.3);  color:#86efac; }
+.auth-alert.error   { background: rgba(239,68,68,0.12);  border:1px solid rgba(239,68,68,0.3);  color:#fca5a5; }
+.auth-alert.show    { display: block; animation: alertIn 0.3s ease; }
+@keyframes alertIn { from{opacity:0;transform:translateY(-6px);} to{opacity:1;transform:translateY(0);} }
+
+/* ── VERIFICACIÓN DE CORREO ── */
+.verify-icon {
+  font-size: 3.5rem;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+.verify-email-shown {
+  font-weight: 700;
+  color: var(--red);
+  display: block;
+  text-align: center;
+  margin: 0.5rem 0 1.25rem;
+  font-size: 0.9rem;
+  word-break: break-all;
+}
+.otp-inputs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 1rem 0;
+}
+.otp-input {
+  width: 46px !important;
+  height: 52px !important;
+  text-align: center !important;
+  font-size: 1.3rem !important;
+  font-weight: 700 !important;
+  padding: 0 !important;
+  border-radius: 10px !important;
+}
+.resend-row {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+.resend-countdown { color: var(--red); font-weight: 600; }
+
+/* ── SESIÓN ACTIVA (panel de usuario) ── */
+.user-panel { text-align: center; }
+.user-avatar {
+  width: 72px; height: 72px;
+  background: linear-gradient(135deg, var(--red), #ff6b35);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 auto 1rem;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 1px;
+}
+.user-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  margin-bottom: 0.2rem;
+}
+.user-email { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+.user-badge {
+  display: inline-block;
+  background: rgba(34,197,94,0.12);
+  border: 1px solid rgba(34,197,94,0.3);
+  color: #86efac;
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.5rem;
+}
+.user-menu { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+.user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--darker);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.user-menu-item:hover { border-color: var(--red); }
+.user-menu-icon { font-size: 1.1rem; }
+.btn-logout {
+  width: 100%;
+  background: transparent;
+  border: 1.5px solid rgba(239,68,68,0.3);
+  color: #fca5a5;
+  border-radius: 10px;
+  padding: 11px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-logout:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.6); }
+
+/* ── VOLVER A LA TIENDA ── */
+.back-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 1.25rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--red); }
+
+/* ── MODO CLARO ── */
+body.light-mode .auth-card    { background: #fff; border-color: #e0e0e0; box-shadow: 0 24px 60px rgba(0,0,0,0.12); }
+body.light-mode .auth-tabs    { background: #f0f0f0; }
+body.light-mode .form-field input { background: #f5f5f5; color: #111; border-color: #ddd; }
+body.light-mode .user-menu-item   { background: #f5f5f5; border-color: #e0e0e0; color: #111; }
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+  .auth-card  { padding: 1.75rem 1.25rem; border-radius: 16px; }
+  .auth-title { font-size: 1.5rem; }
+  .otp-input  { width: 40px !important; height: 46px !important; font-size: 1.1rem !important; }
+  .otp-inputs { gap: 7px; }
+}
+</style>
+</head>
+<body>
+
+<div class="auth-page">
+  <div class="auth-card" id="authCard">
+
+    <!-- LOGO -->
+    <div class="auth-logo">
+      <a href="index.html">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 58" width="160" height="46">
+          <defs>
+            <linearGradient id="mg" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="#ffffff"/>
+              <stop offset="40%"  stop-color="#c8c8c8"/>
+              <stop offset="100%" stop-color="#888888"/>
+            </linearGradient>
+            <linearGradient id="rg" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stop-color="#ff4444"/>
+              <stop offset="100%" stop-color="#cc0000"/>
+            </linearGradient>
+            <filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.8"/></filter>
+          </defs>
+          <text x="30" y="36" font-family="'Bebas Neue',Arial,sans-serif" font-size="38" font-style="italic" letter-spacing="1" fill="url(#mg)" filter="url(#sh)">RUTA</text>
+          <text x="120" y="36" font-family="'Bebas Neue',Arial,sans-serif" font-size="38" font-style="italic" fill="url(#rg)" filter="url(#sh)">10</text>
+          <rect x="0" y="40" width="220" height="2" fill="#E02020" rx="1"/>
+          <text x="100" y="53" font-family="'DM Sans',Arial,sans-serif" font-size="9" letter-spacing="2" fill="#bbbbbb" text-anchor="middle">CASCOS · ACCESORIOS · EQUIPO</text>
+        </svg>
+      </a>
+    </div>
+
+    <!-- ════════════ PANEL: LOGIN / REGISTRO ════════════ -->
+    <div id="panelMain">
+      <h2 class="auth-title">BIENVENIDO</h2>
+      <p class="auth-subtitle">Inicia sesión o crea tu cuenta</p>
+
+      <!-- Alerta global -->
+      <div class="auth-alert" id="mainAlert"></div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin"    onclick="switchAuthTab('login')">Iniciar sesión</button>
+        <button class="auth-tab"        id="tabRegister" onclick="switchAuthTab('register')">Registrarse</button>
+      </div>
+
+      <!-- ── FORMULARIO LOGIN ── -->
+      <form class="auth-form" id="formLogin" onsubmit="handleLogin(event)" novalidate>
+
+        <div class="form-field">
+          <label>Correo electrónico</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="loginEmail" placeholder="tu@email.com" autocomplete="email" required>
+          </div>
+          <span class="field-msg" id="loginEmailMsg"></span>
+        </div>
+
+        <div class="form-field">
+          <label>Contraseña</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="toggle-pass" onclick="togglePassword('loginPass', this)">👁️</button>
+          </div>
+          <span class="field-msg" id="loginPassMsg"></span>
+        </div>
+
+        <div class="form-options">
+          <label class="form-check">
+            <input type="checkbox" id="rememberMe">
+            Recordarme
+          </label>
+          <button type="button" class="form-link" onclick="showPanel('recovery')">¿Olvidaste tu contraseña?</button>
+        </div>
+
+        <button type="submit" class="btn-auth" id="btnLogin">
+          <div class="btn-spinner" id="spinnerLogin"></div>
+          <span id="btnLoginTxt">Ingresar</span>
+        </button>
+
+      </form>
+
+      <!-- ── FORMULARIO REGISTRO ── -->
+      <form class="auth-form" id="formRegister" onsubmit="handleRegister(event)" novalidate style="display:none;">
+
+        <div class="form-field">
+          <label>Nombre completo</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="regName" placeholder="Tu nombre completo" autocomplete="name" required>
+          </div>
+          <span class="field-msg" id="regNameMsg"></span>
+        </div>
+
+        <div class="form-field">
+          <label>Correo electrónico</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="regEmail" placeholder="tu@email.com" autocomplete="email" required>
+          </div>
+          <span class="field-msg" id="regEmailMsg"></span>
+        </div>
+
+        <div class="form-field">
+          <div class="pass-strength">
+            <div class="pass-strength-bar"><div class="pass-strength-fill" id="passStrengthFill"></div></div>
+            <span class="pass-strength-label" id="passStrengthLabel">Escribe una contraseña</span>
+          </div>
+          <span class="field-msg" id="regPassMsg"></span>
+          <label>Contraseña</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="regPass" placeholder="Mín. 8 caracteres" autocomplete="new-password" oninput="checkPassStrength(this.value)" required>
+            <button type="button" class="toggle-pass" onclick="togglePassword('regPass', this)">👁️</button>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>Confirmar contraseña</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="regPassConfirm" placeholder="Repite tu contraseña" autocomplete="new-password" required>
+            <button type="button" class="toggle-pass" onclick="togglePassword('regPassConfirm', this)">👁️</button>
+          </div>
+          <span class="field-msg" id="regPassConfirmMsg"></span>
+        </div>
+
+        <div class="form-field">
+          <label>Teléfono <span style="color:var(--muted);font-weight:400;">(opcional)</span></label>
+          <div class="input-wrap">
+            <span class="input-icon">📞</span>
+            <input type="tel" id="regPhone" placeholder="+57 300 000 0000" autocomplete="tel">
+          </div>
+        </div>
+
+        <label class="form-check" style="align-self:flex-start;">
+          <input type="checkbox" id="acceptTerms" required>
+          Acepto los <a href="#" class="form-link" style="display:inline;">términos y condiciones</a>
+        </label>
+        <span class="field-msg" id="termsMsg"></span>
+
+        <button type="submit" class="btn-auth" id="btnRegister">
+          <div class="btn-spinner" id="spinnerRegister"></div>
+          <span id="btnRegisterTxt">Crear cuenta</span>
+        </button>
+
+      </form>
+    </div>
+
+    <!-- ════════════ PANEL: RECUPERACIÓN ════════════ -->
+    <div id="panelRecovery" style="display:none;">
+      <h2 class="auth-title">RECUPERAR ACCESO</h2>
+      <p class="auth-subtitle">Te enviaremos un enlace para restablecer tu contraseña</p>
+
+      <div class="auth-alert" id="recoveryAlert"></div>
+
+      <form class="auth-form" id="formRecovery" onsubmit="handleRecovery(event)" novalidate>
+
+        <div class="form-field">
+          <label>Correo electrónico</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="recoveryEmail" placeholder="tu@email.com" autocomplete="email" required>
+          </div>
+          <span class="field-msg" id="recoveryEmailMsg"></span>
+        </div>
+
+        <button type="submit" class="btn-auth" id="btnRecovery">
+          <div class="btn-spinner" id="spinnerRecovery"></div>
+          <span id="btnRecoveryTxt">Enviar enlace</span>
+        </button>
+
+        <button type="button" class="form-link" style="text-align:center;margin-top:0.25rem;" onclick="showPanel('main')">
+          ← Volver al inicio de sesión
+        </button>
+
+      </form>
+    </div>
+
+    <!-- ════════════ PANEL: VERIFICACIÓN ════════════ -->
+    <div id="panelVerify" style="display:none;">
+      <div class="verify-icon">📧</div>
+      <h2 class="auth-title">VERIFICA TU CORREO</h2>
+      <p class="auth-subtitle">Ingresa el código de 6 dígitos que enviamos a:</p>
+      <span class="verify-email-shown" id="verifyEmailShown"></span>
+
+      <div class="auth-alert" id="verifyAlert"></div>
+
+      <form class="auth-form" id="formVerify" onsubmit="handleVerify(event)" novalidate>
+
+        <!-- 6 inputs OTP -->
+        <div class="otp-inputs">
+          <input class="otp-input form-field input-wrap" type="text" maxlength="1" inputmode="numeric" id="otp0" oninput="otpMove(this,0)" onkeydown="otpBack(event,0)">
+          <input class="otp-input form-field input-wrap" type="text" maxlength="1" inputmode="numeric" id="otp1" oninput="otpMove(this,1)" onkeydown="otpBack(event,1)">
+          <input class="otp-input form-field input-wrap" type="text" maxlength="1" inputmode="numeric" id="otp2" oninput="otpMove(this,2)" onkeydown="otpBack(event,2)">
+          <input class="otp-input form-field input-wrap" type="text" maxlength="1" inputmode="numeric" id="otp3" oninput="otpMove(this,3)" onkeydown="otpBack(event,3)">
+          <input class="otp-input form-field input-wrap" type="text" maxlength="1" inputmode="numeric" id="otp4" oninput="otpMove(this,4)" onkeydown="otpBack(event,4)">
+          <input class="otp-input form-field input-wrap" type="text" maxlength="1" inputmode="numeric" id="otp5" oninput="otpMove(this,5)" onkeydown="otpBack(event,5)">
+        </div>
+
+        <button type="submit" class="btn-auth" id="btnVerify">
+          <div class="btn-spinner" id="spinnerVerify"></div>
+          <span id="btnVerifyTxt">Verificar código</span>
+        </button>
+
+      </form>
+
+      <div class="resend-row">
+        ¿No llegó el código?
+        <button class="form-link" id="btnResend" onclick="resendCode()" disabled>
+          Reenviar en <span class="resend-countdown" id="countdownTxt">60s</span>
+        </button>
+      </div>
+
+      <button type="button" class="form-link" style="display:block;text-align:center;margin-top:0.75rem;" onclick="showPanel('main')">
+        ← Cambiar correo
+      </button>
+    </div>
+
+    <!-- ════════════ PANEL: SESIÓN ACTIVA ════════════ -->
+    <div id="panelUser" style="display:none;">
+      <div class="user-panel">
+        <div class="user-avatar" id="userAvatar">R</div>
+        <div class="user-name"  id="userNameDisplay">Usuario</div>
+        <div class="user-email" id="userEmailDisplay">—</div>
+        <div class="user-badge">✓ Sesión verificada</div>
+        <div class="user-menu">
+          <a href="index.html" class="user-menu-item">
+            <span class="user-menu-icon">🏠</span> Ir a la tienda
+          </a>
+          <a href="index.html#mas-vendidos" class="user-menu-item">
+            <span class="user-menu-icon">🛒</span> Ver productos
+          </a>
+          <a href="garantias.html" class="user-menu-item">
+            <span class="user-menu-icon">🛡️</span> Garantías
+          </a>
+          <div class="user-menu-item" onclick="showPanel('recovery')">
+            <span class="user-menu-icon">🔑</span> Cambiar contraseña
+          </div>
+        </div>
+        <button class="btn-logout" onclick="handleLogout()">Cerrar sesión</button>
+      </div>
+    </div>
+
+    <!-- Volver a la tienda -->
+    <a href="index.html" class="back-link">← Volver a la tienda</a>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toastIcon">✅</span>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+/* ============================================================
+   RUTA 10 — auth.js
+   Sistema completo de autenticación con localStorage.
+
+   NOTA: Este sistema es una simulación funcional que usa
+   localStorage. Para producción real, conecta con un
+   backend (Firebase, Supabase, etc.) reemplazando las
+   funciones marcadas con // → BACKEND.
+============================================================ */
+
+/* ── ESTADO ── */
+const DB_KEY     = 'ruta10_users';
+const SESSION_KEY = 'ruta10_session';
+let pendingEmail = '';
+let resendTimer  = null;
+
+/* ── INICIALIZACIÓN ── */
+window.addEventListener('DOMContentLoaded', () => {
+  applyTheme();
+  checkSession();
+});
+
+function checkSession() {
+  const session = getSession();
+  if (session) {
+    showUserPanel(session);
+  } else {
+    showPanel('main');
+  }
+}
+
+/* ── TEMA ── */
+function applyTheme() {
+  if (localStorage.getItem('ruta10_theme') === 'light') {
+    document.body.classList.add('light-mode');
+  }
+}
+
+/* ============================================================
+   NAVEGACIÓN ENTRE PANELES
+============================================================ */
+function showPanel(panel) {
+  ['panelMain','panelRecovery','panelVerify','panelUser'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  const map = { main:'panelMain', recovery:'panelRecovery', verify:'panelVerify', user:'panelUser' };
+  document.getElementById(map[panel]).style.display = '';
+  clearAlerts();
+}
+
+function switchAuthTab(tab) {
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+  document.getElementById('formLogin').style.display    = tab === 'login'    ? '' : 'none';
+  document.getElementById('formRegister').style.display = tab === 'register' ? '' : 'none';
+  clearAlerts();
+}
+
+/* ============================================================
+   LOGIN
+============================================================ */
+async function handleLogin(e) {
+  e.preventDefault();
+  clearAlerts();
+
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  let   valid = true;
+
+  if (!isValidEmail(email)) {
+    setFieldError('loginEmail', 'loginEmailMsg', 'Ingresa un correo válido');
+    valid = false;
+  }
+  if (pass.length < 6) {
+    setFieldError('loginPass', 'loginPassMsg', 'La contraseña es muy corta');
+    valid = false;
+  }
+  if (!valid) return;
+
+  setLoading('btnLogin', 'spinnerLogin', 'btnLoginTxt', true);
+
+  await delay(900); // → BACKEND: await api.login(email, pass)
+
+  const users = getUsers();
+  const user  = users.find(u => u.email === email);
+
+  setLoading('btnLogin', 'spinnerLogin', 'btnLoginTxt', false);
+
+  if (!user) {
+    showAlert('mainAlert', 'error', '❌ No encontramos una cuenta con ese correo.');
+    return;
+  }
+  if (user.password !== hashSimple(pass)) {
+    showAlert('mainAlert', 'error', '❌ Contraseña incorrecta. Inténtalo de nuevo.');
+    setFieldError('loginPass', 'loginPassMsg', 'Contraseña incorrecta');
+    return;
+  }
+  if (!user.verified) {
+    pendingEmail = email;
+    document.getElementById('verifyEmailShown').textContent = email;
+    showPanel('verify');
+    startResendCountdown();
+    showAlert('verifyAlert', 'info', '📧 Debes verificar tu correo antes de ingresar. Ingresa el código enviado.');
+    return;
+  }
+
+  // Sesión exitosa
+  const remember = document.getElementById('rememberMe').checked;
+  saveSession(user, remember);
+  showToast('👋', `¡Bienvenido de vuelta, ${user.name.split(' ')[0]}!`);
+  setTimeout(() => showUserPanel(user), 600);
+}
+
+/* ============================================================
+   REGISTRO
+============================================================ */
+async function handleRegister(e) {
+  e.preventDefault();
+  clearAlerts();
+
+  const name    = document.getElementById('regName').value.trim();
+  const email   = document.getElementById('regEmail').value.trim();
+  const pass    = document.getElementById('regPass').value;
+  const confirm = document.getElementById('regPassConfirm').value;
+  const terms   = document.getElementById('acceptTerms').checked;
+  let   valid   = true;
+
+  if (name.length < 2) {
+    setFieldError('regName','regNameMsg','Ingresa tu nombre completo'); valid = false;
+  }
+  if (!isValidEmail(email)) {
+    setFieldError('regEmail','regEmailMsg','Ingresa un correo válido'); valid = false;
+  }
+  if (pass.length < 8) {
+    setFieldError('regPass','regPassMsg','La contraseña debe tener al menos 8 caracteres'); valid = false;
+  }
+  if (pass !== confirm) {
+    setFieldError('regPassConfirm','regPassConfirmMsg','Las contraseñas no coinciden'); valid = false;
+  }
+  if (!terms) {
+    setFieldError(null,'termsMsg','Debes aceptar los términos y condiciones'); valid = false;
+  }
+  if (!valid) return;
+
+  setLoading('btnRegister','spinnerRegister','btnRegisterTxt', true);
+  await delay(1000); // → BACKEND: await api.register(name, email, pass)
+
+  const users = getUsers();
+  if (users.find(u => u.email === email)) {
+    setLoading('btnRegister','spinnerRegister','btnRegisterTxt', false);
+    showAlert('mainAlert','error','❌ Ya existe una cuenta con ese correo. ¿Quieres iniciar sesión?');
+    setFieldError('regEmail','regEmailMsg','Este correo ya está registrado');
+    return;
+  }
+
+  // Crear usuario (pendiente de verificación)
+  const newUser = {
+    id:       Date.now(),
+    name,
+    email,
+    phone:    document.getElementById('regPhone').value.trim(),
+    password: hashSimple(pass),
+    verified: false,
+    otp:      generateOTP(),
+    createdAt: new Date().toISOString(),
+  };
+  users.push(newUser);
+  saveUsers(users);
+
+  setLoading('btnRegister','spinnerRegister','btnRegisterTxt', false);
+
+  // Ir a verificación
+  pendingEmail = email;
+  document.getElementById('verifyEmailShown').textContent = email;
+  showPanel('verify');
+  startResendCountdown();
+  showToast('📧', 'Código de verificación enviado');
+  showAlert('verifyAlert','info',`📧 Simulación: tu código es <strong>${newUser.otp}</strong> (en producción llegaría al correo)`);
+}
+
+/* ============================================================
+   VERIFICACIÓN OTP
+============================================================ */
+function otpMove(el, idx) {
+  el.value = el.value.replace(/[^0-9]/g,'');
+  if (el.value && idx < 5) document.getElementById('otp' + (idx+1)).focus();
+}
+function otpBack(e, idx) {
+  if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+    document.getElementById('otp' + (idx-1)).focus();
+  }
+}
+function getOTPValue() {
+  return [0,1,2,3,4,5].map(i => document.getElementById('otp'+i).value).join('');
+}
+function clearOTP() {
+  [0,1,2,3,4,5].forEach(i => { document.getElementById('otp'+i).value=''; });
+  document.getElementById('otp0').focus();
+}
+
+async function handleVerify(e) {
+  e.preventDefault();
+  const code = getOTPValue();
+  if (code.length < 6) {
+    showAlert('verifyAlert','error','Ingresa los 6 dígitos del código'); return;
+  }
+
+  setLoading('btnVerify','spinnerVerify','btnVerifyTxt', true);
+  await delay(800); // → BACKEND: await api.verifyOTP(pendingEmail, code)
+
+  const users = getUsers();
+  const user  = users.find(u => u.email === pendingEmail);
+
+  setLoading('btnVerify','spinnerVerify','btnVerifyTxt', false);
+
+  if (!user) {
+    showAlert('verifyAlert','error','No se encontró la cuenta. Vuelve a registrarte.'); return;
+  }
+  if (user.otp !== code) {
+    showAlert('verifyAlert','error','❌ Código incorrecto. Revisa tu correo o solicita uno nuevo.');
+    clearOTP();
+    return;
+  }
+
+  // Verificado
+  user.verified = true;
+  user.otp = null;
+  saveUsers(users);
+  saveSession(user, false);
+  clearResendTimer();
+
+  showToast('🎉','¡Cuenta verificada! Bienvenido a Ruta 10');
+  setTimeout(() => showUserPanel(user), 700);
+}
+
+function resendCode() {
+  const users = getUsers();
+  const user  = users.find(u => u.email === pendingEmail);
+  if (!user) return;
+
+  user.otp = generateOTP();
+  saveUsers(users);
+
+  showAlert('verifyAlert','info',`📧 Nuevo código enviado. Simulación: <strong>${user.otp}</strong>`);
+  clearOTP();
+  startResendCountdown();
+}
+
+/* ============================================================
+   RECUPERACIÓN DE CONTRASEÑA
+============================================================ */
+async function handleRecovery(e) {
+  e.preventDefault();
+  clearAlerts();
+
+  const email = document.getElementById('recoveryEmail').value.trim();
+  if (!isValidEmail(email)) {
+    setFieldError('recoveryEmail','recoveryEmailMsg','Ingresa un correo válido'); return;
+  }
+
+  setLoading('btnRecovery','spinnerRecovery','btnRecoveryTxt', true);
+  await delay(1000); // → BACKEND: await api.sendPasswordReset(email)
+  setLoading('btnRecovery','spinnerRecovery','btnRecoveryTxt', false);
+
+  // Siempre mostrar éxito (no revelar si el email existe)
+  showAlert('recoveryAlert','success',
+    '✅ Si ese correo está registrado, recibirás un enlace en los próximos minutos. Revisa tu bandeja de spam.');
+
+  document.getElementById('recoveryEmail').value = '';
+}
+
+/* ============================================================
+   SESIÓN DE USUARIO
+============================================================ */
+function showUserPanel(user) {
+  showPanel('user');
+  document.getElementById('userAvatar').textContent       = user.name.charAt(0).toUpperCase();
+  document.getElementById('userNameDisplay').textContent  = user.name;
+  document.getElementById('userEmailDisplay').textContent = user.email;
+}
+
+function handleLogout() {
+  clearSession();
+  showToast('👋','Sesión cerrada correctamente');
+  setTimeout(() => {
+    showPanel('main');
+    switchAuthTab('login');
+  }, 600);
+}
+
+/* ============================================================
+   FORTALEZA DE CONTRASEÑA
+============================================================ */
+function checkPassStrength(pass) {
+  const fill  = document.getElementById('passStrengthFill');
+  const label = document.getElementById('passStrengthLabel');
+  let score   = 0;
+
+  if (pass.length >= 8)              score++;
+  if (pass.length >= 12)             score++;
+  if (/[A-Z]/.test(pass))           score++;
+  if (/[0-9]/.test(pass))           score++;
+  if (/[^A-Za-z0-9]/.test(pass))   score++;
+
+  const levels = [
+    { pct:'0%',   color:'transparent',   txt:'Escribe una contraseña' },
+    { pct:'25%',  color:'#ef4444',       txt:'Muy débil' },
+    { pct:'50%',  color:'#f97316',       txt:'Débil' },
+    { pct:'75%',  color:'#eab308',       txt:'Aceptable' },
+    { pct:'90%',  color:'#22c55e',       txt:'Fuerte' },
+    { pct:'100%', color:'#16a34a',       txt:'Muy fuerte 💪' },
+  ];
+  const lv = levels[Math.min(score, 5)];
+  fill.style.width      = lv.pct;
+  fill.style.background = lv.color;
+  label.textContent     = lv.txt;
+  label.style.color     = score > 0 ? lv.color : 'var(--muted)';
+}
+
+/* ============================================================
+   UTILIDADES
+============================================================ */
+function togglePassword(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const isPass = input.type === 'password';
+  input.type = isPass ? 'text' : 'password';
+  btn.textContent = isPass ? '🙈' : '👁️';
+}
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function setFieldError(inputId, msgId, msg) {
+  if (inputId) {
+    const el = document.getElementById(inputId);
+    if (el) el.classList.add('error');
+  }
+  const msgEl = document.getElementById(msgId);
+  if (msgEl) { msgEl.textContent = msg; msgEl.className = 'field-msg error'; }
+}
+
+function clearAlerts() {
+  document.querySelectorAll('.auth-alert').forEach(a => { a.className='auth-alert'; a.innerHTML=''; });
+  document.querySelectorAll('.field-msg').forEach(m => { m.textContent=''; m.className='field-msg'; });
+  document.querySelectorAll('input').forEach(i => { i.classList.remove('error','success'); });
+}
+
+function showAlert(id, type, html) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = `auth-alert ${type} show`;
+  el.innerHTML = html;
+}
+
+function setLoading(btnId, spinnerId, txtId, loading) {
+  document.getElementById(btnId).disabled           = loading;
+  document.getElementById(spinnerId).style.display  = loading ? 'block' : 'none';
+  document.getElementById(txtId).style.opacity      = loading ? '0' : '1';
+}
+
+function showToast(icon, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastMsg').textContent  = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function generateOTP() {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+/* Hash simple (para demo). En producción usa bcrypt en el backend */
+function hashSimple(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return String(hash);
+}
+
+/* ── localStorage helpers ── */
+function getUsers()        { return JSON.parse(localStorage.getItem(DB_KEY) || '[]'); }
+function saveUsers(users)  { localStorage.setItem(DB_KEY, JSON.stringify(users)); }
+
+function getSession()      { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); }
+function saveSession(user, remember) {
+  const session = { id:user.id, name:user.name, email:user.email, verified:user.verified, remember };
+  localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  // Exporta al script.js principal
+  localStorage.setItem('ruta10_logged', 'true');
+  localStorage.setItem('ruta10_username', user.name);
+}
+function clearSession() {
+  localStorage.removeItem(SESSION_KEY);
+  localStorage.removeItem('ruta10_logged');
+  localStorage.removeItem('ruta10_username');
+}
+
+/* ── Countdown para reenvío de OTP ── */
+function startResendCountdown() {
+  clearResendTimer();
+  let secs = 60;
+  const btn = document.getElementById('btnResend');
+  const cnt = document.getElementById('countdownTxt');
+  btn.disabled = true;
+  cnt.textContent = secs + 's';
+
+  resendTimer = setInterval(() => {
+    secs--;
+    cnt.textContent = secs + 's';
+    if (secs <= 0) {
+      clearInterval(resendTimer);
+      btn.disabled = false;
+      cnt.textContent = '';
+      btn.innerHTML = 'Reenviar código';
+    }
+  }, 1000);
+}
+function clearResendTimer() {
+  if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
+}
+</script>
+</body>
+</html>

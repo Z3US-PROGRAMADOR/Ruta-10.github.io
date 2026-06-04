@@ -695,3 +695,35 @@ function confirmAddToCart() {
   addToCart(id);
   closeProductModal();
 }
+
+/* ============================================================
+   AUTENTICACIÓN — Redirige a auth.html
+   Lee la sesión guardada y actualiza el botón de la navbar.
+============================================================ */
+
+/* Redirige a la página de login/registro */
+function goToAuth() {
+  window.location.href = 'auth.html';
+}
+
+/* Al cargar index.html: verifica si hay sesión activa
+   y actualiza el botón "Ingresar" con el nombre del usuario */
+(function checkSession() {
+  const session =
+    JSON.parse(localStorage.getItem('ruta10_user') || 'null') ||
+    JSON.parse(sessionStorage.getItem('ruta10_user') || 'null');
+
+  const btn = document.getElementById('btnLogin');
+  if (!btn) return;
+
+  if (session && session.name) {
+    /* Hay sesión activa — muestra el nombre */
+    const firstName = session.name.split(' ')[0];
+    btn.textContent  = `👤 ${firstName}`;
+    btn.onclick      = () => { window.location.href = 'auth.html'; };
+  } else {
+    /* Sin sesión — muestra "Ingresar" */
+    btn.textContent  = 'Ingresar';
+    btn.onclick      = goToAuth;
+  }
+})();
