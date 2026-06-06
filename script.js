@@ -727,3 +727,41 @@ function goToAuth() {
     btn.onclick      = goToAuth;
   }
 })();
+
+/* ============================================================
+   NAVBAR — BOTÓN DINÁMICO SEGÚN SESIÓN
+   Muestra "Ingresar" si no hay sesión,
+   o el ícono de cuenta si el usuario está logueado.
+============================================================ */
+(function updateNavAuth() {
+  const session =
+    JSON.parse(localStorage.getItem('ruta10_user')   || 'null') ||
+    JSON.parse(sessionStorage.getItem('ruta10_user') || 'null');
+
+  const btnLogin  = document.getElementById('btnLogin');
+  const btnAccount= document.getElementById('btnAccount');
+
+  if (!btnLogin) return;
+
+  if (session && session.name) {
+    /* ── USUARIO LOGUEADO ── */
+    const firstName = session.name.split(' ')[0];
+    const initials  = session.name.split(' ').map(n => n[0]).slice(0,2).join('').toUpperCase();
+
+    /* Oculta el botón "Ingresar" */
+    btnLogin.style.display = 'none';
+
+    /* Muestra el botón de cuenta (si existe) o créalo */
+    if (btnAccount) {
+      btnAccount.style.display = 'flex';
+      btnAccount.title = `Mi cuenta — ${firstName}`;
+    }
+
+  } else {
+    /* ── SIN SESIÓN ── */
+    /* Muestra "Ingresar" */
+    if (btnLogin)   btnLogin.style.display = '';
+    /* Oculta el botón de cuenta */
+    if (btnAccount) btnAccount.style.display = 'none';
+  }
+})();
