@@ -1,4 +1,4 @@
-const supabaseUrl = "https://emhojhrdwiitlqkdblxa.supabase.co/rest/v1/";
+const supabaseUrl = "https://emhojhrdwiitlqkdblxa.supabase.co";
 
 const supabaseKey = "sb_publishable_M4ooOjAUewjS8p3r7G-KwA_Ks9Gmpr2";
 
