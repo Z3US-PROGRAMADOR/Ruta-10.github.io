@@ -40,19 +40,34 @@
 
 const ALL_PRODUCTS = [
 { id: 1,  name: 'Casco Integral HRO 506', brand: 'HRO', price: 300000,  oldPrice: null,
-    cat: 'cascos',    img: 'Imagenes/Productos/casco-hro-506-negro-visor-rojo.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    cat: 'cascos', sub: 'cascos integrales',    img: 'Imagenes/Productos/casco-hro-506-negro-visor-rojo.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
     sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:true}],
     colors: ['Negro Mate','Blanco Brillante','Gris Brillante'] },
 
 { id: 2,  name: 'Casco Integral Xone 500 GT Negro sólid', brand: 'Xone', price: 240000,  oldPrice: null,
-    cat: 'cascos',    img: 'Imagenes/Productos/casco-xone-500-gt-negro-sólido.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    cat: 'cascos', sub: 'cascos integrales',    img: 'Imagenes/Productos/casco-xone-500-gt-negro-sólido.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
     sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false}],
     colors: ['Negro Mate'] },
 
 { id: 3,  name: 'Casco integral ICH 503 Solid', brand: 'ICH', price: 200000,  oldPrice: null,
-    cat: 'cascos',    img: 'Imagenes/Productos/Casco integral ICH 503 Solid.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    cat: 'cascos', sub: 'cascos integrales',    img: 'Imagenes/Productos/Casco integral ICH 503 Solid.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
     sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false}],
     colors: ['Negro Mate'] },
+
+{ id: 4,  name: 'Pesas para manubrio', brand: 'GX', price: 20000,  oldPrice: null,
+    cat: 'accesorios', sub: 'accesorios para moto',    img: 'Imagenes/Productos/pesas-para-manubrio-negro.jpg', icon: '📡', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    sizes: [],
+    colors: ['Negro','Azul','Rojo','Negro circulares',] },
+
+{ id: 5,  name: 'Manilares', brand: 'Everestt', price: 28000,  oldPrice: null,
+    cat: 'accesorios', sub: 'accesorios para moto',    img: 'Imagenes/Productos/manilares-azules.jpg', icon: '📡', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    sizes: [],
+    colors: ['Azul','gris'] },
+
+{ id: 6,  name: 'Conos eje en aluminio', brand: '', price: 12000,  oldPrice: null,
+    cat: 'accesorios', sub: 'accesorios para moto',    img: 'Imagenes/Productos/conos-ejes-aluminio-azules.jpg', icon: '📡', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    sizes: [],
+    colors: ['Azul','gris','naranja','rojo'] },
 
 ];
 
@@ -67,30 +82,30 @@ const PRODUCTS = [
     cat: 'cascos',    img: '', icon: '🪖', badge: 'new',  stars: 5, reviews: 89,  stock: false,
     sizes: [], colors: [] },
 
-  { id: 3,  name: 'Guantes Alpinestars GP Pro R3', brand: 'Alpinestars', price: 280000,  oldPrice: 350000,
+  { id: 33,  name: 'Guantes Alpinestars GP Pro R3', brand: 'Alpinestars', price: 280000,  oldPrice: 350000,
     cat: 'guantes',   img: '', icon: '🧤', badge: 'sale', stars: 4, reviews: 203, stock: true,
     sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:true},{s:'XL',out:false}],
     colors: ['Negro/Rojo','Negro/Blanco'] },
 
-  { id: 4,  name: 'Chaqueta Dainese Veloce D-Dry', brand: 'Dainese',    price: 720000,  oldPrice: null,
+  { id: 43,  name: 'Chaqueta Dainese Veloce D-Dry', brand: 'Dainese',    price: 720000,  oldPrice: null,
     cat: 'chaquetas', img: '', icon: '🧥', badge: 'new',  stars: 5, reviews: 57,  stock: true,
     sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false}],
     colors: ['Negro','Gris Oscuro'] },
 
-  { id: 5,  name: 'Casco Arai RX-7V Evo',          brand: 'Arai',       price: 2100000, oldPrice: null,
+  { id: 53,  name: 'Casco Arai RX-7V Evo',          brand: 'Arai',       price: 2100000, oldPrice: null,
     cat: 'cascos',    img: '', icon: '🪖', badge: null,   stars: 5, reviews: 44,  stock: false,
     sizes: [], colors: [] },
 
-  { id: 6,  name: 'Botas Sidi Canyon Gore-Tex',    brand: 'Sidi',       price: 490000,  oldPrice: 620000,
+  { id: 63,  name: 'Botas Sidi Canyon Gore-Tex',    brand: 'Sidi',       price: 490000,  oldPrice: 620000,
     cat: 'botas',     img: '', icon: '👢', badge: 'sale', stars: 4, reviews: 76,  stock: true,
     sizes: [{s:'39',out:false},{s:'40',out:false},{s:'41',out:true},{s:'42',out:false}],
     colors: [] },
 
-  { id: 7,  name: 'Intercomunicador Sena 50S',     brand: 'Sena',       price: 680000,  oldPrice: null,
+  { id: 73,  name: 'Intercomunicador Sena 50S',     brand: 'Sena',       price: 680000,  oldPrice: null,
     cat: 'accesorios',img: '', icon: '📡', badge: 'hot',  stars: 5, reviews: 312, stock: true,
     sizes: [], colors: ['Negro','Gris Plata'] },
 
-  { id: 8,  name: 'Casco LS2 FF900 Valiant II',    brand: 'LS2',        price: 430000,  oldPrice: 520000,
+  { id: 83,  name: 'Casco LS2 FF900 Valiant II',    brand: 'LS2',        price: 430000,  oldPrice: 520000,
     cat: 'cascos',    img: '', icon: '🪖', badge: 'sale', stars: 4, reviews: 95,  stock: true,
     sizes: [{s:'XS',out:false},{s:'S',out:false},{s:'M',out:true},{s:'L',out:false}],
     colors: ['Blanco Brillante','Negro Mate'] },
@@ -99,17 +114,17 @@ const PRODUCTS = [
 /* ── NUEVOS INGRESOS ── */
 const NEW_PRODUCTS = [
   { id: 1,  name: 'Casco Integral HRO 506', brand: 'HRO', price: 300000,  oldPrice: null,
-    cat: 'cascos',    img: 'Imagenes/Productos/casco-hro-506-negro-visor-rojo.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+    cat: 'cascos', sub: 'cascos integrales',    img: 'Imagenes/Productos/casco-hro-506-negro-visor-rojo.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
     sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:true}],
     colors: ['Negro Mate','Blanco Brillante','Gris Brillante'] },
 
-  { id: 2,  name: 'Casco Integral Xone 500 GT Negro sólid', brand: 'Xone', price: 240000,  oldPrice: null,
-    cat: 'cascos',    img: 'Imagenes/Productos/casco-xone-500-gt-negro-sólido.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+{ id: 2,  name: 'Casco Integral Xone 500 GT Negro sólid', brand: 'Xone', price: 240000,  oldPrice: null,
+    cat: 'cascos', sub: 'cascos integrales',    img: 'Imagenes/Productos/casco-xone-500-gt-negro-sólido.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
     sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false}],
     colors: ['Negro Mate'] },
 
-  { id: 3,  name: 'Casco integral ICH 503 Solid', brand: 'ICH', price: 200000,  oldPrice: null,
-    cat: 'cascos',    img: 'Imagenes/Productos/Casco integral ICH 503 Solid.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
+{ id: 3,  name: 'Casco integral ICH 503 Solid', brand: 'ICH', price: 200000,  oldPrice: null,
+    cat: 'cascos', sub: 'cascos integrales',    img: 'Imagenes/Productos/Casco integral ICH 503 Solid.jpg', icon: '🪖', badge: 'hot',  stars: 5, reviews: 128, stock: true,
     sizes: [{s:'S',out:false},{s:'M',out:false},{s:'L',out:false},{s:'XL',out:false}],
     colors: ['Negro Mate'] },
 ];
@@ -145,7 +160,7 @@ function renderCard(p) {
 </div>`;
 
   return `
-    <div class="product-card ${isAgotado ? 'card-agotado' : ''}" data-cat="${p.cat}" id="product-${p.id}"
+    <div class="product-card ${isAgotado ? 'card-agotado' : ''}" data-cat="${p.cat}" data-sub="${p.sub ? normalizeText(p.sub) : ''}" id="product-${p.id}"
          style="cursor:pointer;"
          onclick="window.location.href='producto.html?id=${p.id}'">
       <div class="product-img">${imgHtml}</div>
@@ -282,6 +297,7 @@ function getSearchTerms(text, category) {
 
 function applyFilter(cat, subterm = '') {
   activeFilter = cat;
+  const subNorm = subterm ? normalizeText(subterm) : '';
   const terms = subterm ? getSearchTerms(subterm, cat) : [];
   let orderIndex = 0;
 
@@ -289,11 +305,15 @@ function applyFilter(cat, subterm = '') {
     const matchesCat = cat === 'all' || card.dataset.cat === cat;
     let matchesSub = true;
 
-    if (terms.length) {
-      const name = normalizeText(card.querySelector('.product-name')?.textContent || '');
-      const brand = normalizeText(card.querySelector('.product-brand')?.textContent || '');
-      const badge = normalizeText(card.querySelector('.product-badge')?.textContent || '');
-      matchesSub = terms.some(term => name.includes(term) || brand.includes(term) || badge.includes(term));
+    if (subNorm) {
+      if (card.dataset.sub) {
+        matchesSub = card.dataset.sub === subNorm;
+      } else {
+        const name = normalizeText(card.querySelector('.product-name')?.textContent || '');
+        const brand = normalizeText(card.querySelector('.product-brand')?.textContent || '');
+        const badge = normalizeText(card.querySelector('.product-badge')?.textContent || '');
+        matchesSub = terms.some(term => name.includes(term) || brand.includes(term) || badge.includes(term));
+      }
     }
 
     if (matchesCat && matchesSub) {
@@ -536,10 +556,64 @@ function toggleCart() {
 
 function checkout() {
   if (!cart.length) return showToast('⚠️', 'Tu carrito está vacío');
-  showToast('🎉', '¡Gracias por tu compra! Procesando…');
+  document.getElementById('checkoutModal').classList.add('active');
+}
+
+function closeCheckoutModal() {
+  document.getElementById('checkoutModal').classList.remove('active');
+}
+
+async function confirmCheckout(e) {
+  e.preventDefault();
+
+  const nombre    = document.getElementById('coNombre').value.trim();
+  const cedula    = document.getElementById('coCedula').value.trim();
+  const direccion = document.getElementById('coDireccion').value.trim();
+  const telefono  = document.getElementById('coTelefono').value.trim();
+
+  if (!nombre || !cedula || !direccion || !telefono) {
+    return showToast('⚠️', 'Completa todos los campos');
+  }
+
+  const all   = [...PRODUCTS, ...NEW_PRODUCTS, ...ALL_PRODUCTS];
+  let total   = 0;
+  const items = cart.map(i => {
+    const p = all.find(x => x.id === i.id);
+    total += p.price * i.qty;
+    return { id: i.id, name: p.name, price: p.price, qty: i.qty };
+  });
+
+  const session = JSON.parse(localStorage.getItem('ruta10_user') || 'null');
+  const btn = document.getElementById('btnConfirmCheckout');
+  btn.disabled = true;
+  btn.textContent = 'Procesando...';
+
+  const pedido = {
+    user_id: session ? session.id : null,
+    nombre, cedula, direccion, telefono,
+    items, total
+  };
+
+  try {
+    const { error } = await supabaseClient.from('pedidos').insert(pedido);
+    if (error) throw error;
+  } catch (err) {
+    /* Fallback: guarda el pedido localmente si falla Supabase */
+    const pendientes = JSON.parse(localStorage.getItem('ruta10_pedidos') || '[]');
+    pendientes.push({ ...pedido, created_at: new Date().toISOString() });
+    localStorage.setItem('ruta10_pedidos', JSON.stringify(pendientes));
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Confirmar pedido';
+
+  showToast('🎉', '¡Gracias por tu compra! Pronto te contactaremos.');
+  document.getElementById('formCheckout').reset();
+  closeCheckoutModal();
+
   cart = [];
   saveCart(); updateCartCount(); renderCart();
-  setTimeout(() => document.getElementById('cartPanel').classList.remove('open'), 1500);
+  setTimeout(() => document.getElementById('cartPanel').classList.remove('open'), 800);
 }
 
 updateCartCount();
@@ -728,40 +802,3 @@ function goToAuth() {
   }
 })();
 
-/* ============================================================
-   NAVBAR — BOTÓN DINÁMICO SEGÚN SESIÓN
-   Muestra "Ingresar" si no hay sesión,
-   o el ícono de cuenta si el usuario está logueado.
-============================================================ */
-(function updateNavAuth() {
-  const session =
-    JSON.parse(localStorage.getItem('ruta10_user')   || 'null') ||
-    JSON.parse(sessionStorage.getItem('ruta10_user') || 'null');
-
-  const btnLogin  = document.getElementById('btnLogin');
-  const btnAccount= document.getElementById('btnAccount');
-
-  if (!btnLogin) return;
-
-  if (session && session.name) {
-    /* ── USUARIO LOGUEADO ── */
-    const firstName = session.name.split(' ')[0];
-    const initials  = session.name.split(' ').map(n => n[0]).slice(0,2).join('').toUpperCase();
-
-    /* Oculta el botón "Ingresar" */
-    btnLogin.style.display = 'none';
-
-    /* Muestra el botón de cuenta (si existe) o créalo */
-    if (btnAccount) {
-      btnAccount.style.display = 'flex';
-      btnAccount.title = `Mi cuenta — ${firstName}`;
-    }
-
-  } else {
-    /* ── SIN SESIÓN ── */
-    /* Muestra "Ingresar" */
-    if (btnLogin)   btnLogin.style.display = '';
-    /* Oculta el botón de cuenta */
-    if (btnAccount) btnAccount.style.display = 'none';
-  }
-})();

@@ -283,6 +283,7 @@
         <span class="megamenu-chip" onclick="filterAndClose('accesorios')">Cobertores de Moto</span>
         <span class="megamenu-chip" onclick="filterAndClose('accesorios')">Alforjas y Baúles</span>
         <span class="megamenu-chip" onclick="filterAndClose('accesorios')">Cámaras de Acción</span>
+        <span class="megamenu-chip" onclick="filterAndClose('accesorios')">Accesorios para moto</span>
       </div>
       <a class="megamenu-ver-todos" href="#mas-vendidos" onclick="filterAndClose('accesorios')">Ver todos en Accesorios ›</a>
     </div>
@@ -607,6 +608,39 @@
 </div>
 
 <!-- ============================================================
+  MODAL DATOS DE ENVÍO / CHECKOUT
+============================================================ -->
+<div class="modal-overlay" id="checkoutModal" onclick="closeCheckoutModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeCheckoutModal()">×</button>
+    <h2 style="font-size:1.3rem; margin-bottom:1.5rem;">Datos de envío</h2>
+
+    <form id="formCheckout" onsubmit="confirmCheckout(event)" novalidate>
+      <div class="form-field">
+        <label>Nombre completo</label>
+        <input type="text" id="coNombre" required>
+      </div>
+      <div class="form-field" style="margin-top:1rem;">
+        <label>Cédula de ciudadanía</label>
+        <input type="text" id="coCedula" required>
+      </div>
+      <div class="form-field" style="margin-top:1rem;">
+        <label>Dirección de entrega</label>
+        <input type="text" id="coDireccion" required>
+      </div>
+      <div class="form-field" style="margin-top:1rem;">
+        <label>Teléfono</label>
+        <input type="tel" id="coTelefono" required>
+      </div>
+
+      <button type="submit" class="btn-submit" id="btnConfirmCheckout" style="margin-top:2rem; width:100%;">
+        Confirmar pedido
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================================
   MODAL SELECCIÓN DE TALLA Y COLOR
 ============================================================ -->
 <div class="modal-overlay" id="productModal" onclick="closeProductModal()">
@@ -650,8 +684,8 @@
 </div>
 
 <!-- script.js se carga al final para que el DOM esté listo -->
-<script src="script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

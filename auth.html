@@ -579,14 +579,6 @@ body.light-mode .user-menu-item   { background: #f5f5f5; border-color: #e0e0e0; 
           <span class="field-msg" id="regPassConfirmMsg"></span>
         </div>
 
-        <div class="form-field">
-          <label>Teléfono <span style="color:var(--muted);font-weight:400;"></span></label>
-          <div class="input-wrap">
-            <span class="input-icon">📞</span>
-            <input type="tel" id="regPhone" placeholder="+57 300 000 0000" autocomplete="tel"required>
-          </div>
-        </div>
-
         <label class="form-check" style="align-self:flex-start;">
           <input type="checkbox" id="acceptTerms" required>
           Acepto los <a href="#" class="form-link" style="display:inline;">términos y condiciones</a>
@@ -631,46 +623,6 @@ body.light-mode .user-menu-item   { background: #f5f5f5; border-color: #e0e0e0; 
       </form>
     </div>
 
-    <!-- ════════════ PANEL: VERIFICACIÓN ════════════ -->
-    <div id="panelVerify" style="display:none;">
-      <div class="verify-icon">📧</div>
-      <h2 class="auth-title">VERIFICA TU CORREO</h2>
-      <p class="auth-subtitle">Ingresa el código de 6 dígitos que enviamos a:</p>
-      <span class="verify-email-shown" id="verifyEmailShown"></span>
-
-      <div class="auth-alert" id="verifyAlert"></div>
-
-      <form class="auth-form" id="formVerify" onsubmit="handleVerify(event)" novalidate>
-
-        <!-- 6 inputs OTP -->
-        <div class="otp-inputs">
-          <input class="otp-input form-field input-wrap" type="text" maxlength="1" inputmode="numeric" id="otp0" oninput="otpMove(this,0)" onkeydown="otpBack(event,0)">
-          <input class="otp-input form-field input-wrap" type="text" maxlength="1" inputmode="numeric" id="otp1" oninput="otpMove(this,1)" onkeydown="otpBack(event,1)">
-          <input class="otp-input form-field input-wrap" type="text" maxlength="1" inputmode="numeric" id="otp2" oninput="otpMove(this,2)" onkeydown="otpBack(event,2)">
-          <input class="otp-input form-field input-wrap" type="text" maxlength="1" inputmode="numeric" id="otp3" oninput="otpMove(this,3)" onkeydown="otpBack(event,3)">
-          <input class="otp-input form-field input-wrap" type="text" maxlength="1" inputmode="numeric" id="otp4" oninput="otpMove(this,4)" onkeydown="otpBack(event,4)">
-          <input class="otp-input form-field input-wrap" type="text" maxlength="1" inputmode="numeric" id="otp5" oninput="otpMove(this,5)" onkeydown="otpBack(event,5)">
-        </div>
-
-        <button type="submit" class="btn-auth" id="btnVerify">
-          <div class="btn-spinner" id="spinnerVerify"></div>
-          <span id="btnVerifyTxt">Verificar código</span>
-        </button>
-
-      </form>
-
-      <div class="resend-row">
-        ¿No llegó el código?
-        <button class="form-link" id="btnResend" onclick="resendCode()" disabled>
-          Reenviar en <span class="resend-countdown" id="countdownTxt">60s</span>
-        </button>
-      </div>
-
-      <button type="button" class="form-link" style="display:block;text-align:center;margin-top:0.75rem;" onclick="showPanel('main')">
-        ← Cambiar correo
-      </button>
-    </div>
-
     <!-- ════════════ PANEL: SESIÓN ACTIVA ════════════ -->
     <div id="panelUser" style="display:none;">
       <div class="user-panel">
@@ -708,6 +660,8 @@ body.light-mode .user-menu-item   { background: #f5f5f5; border-color: #e0e0e0; 
   <span id="toastMsg"></span>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
 <script>
 /* ============================================================
    RUTA 10 — auth.js
@@ -720,21 +674,22 @@ body.light-mode .user-menu-item   { background: #f5f5f5; border-color: #e0e0e0; 
 ============================================================ */
 
 /* ── ESTADO ── */
-const DB_KEY     = 'ruta10_users';
-const SESSION_KEY = 'ruta10_session';
-let pendingEmail = '';
-let resendTimer  = null;
+const SESSION_KEY = 'ruta10_user';
 
 /* ── INICIALIZACIÓN ── */
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   applyTheme();
-  checkSession();
+  await checkSession();
 });
 
-function checkSession() {
-  const session = getSession();
-  if (session) {
-    showUserPanel(session);
+async function checkSession() {
+  const { data } = await supabaseClient.auth.getSession();
+  if (data.session) {
+    const { data: perfil } = await supabaseClient
+      .from('perfiles').select('*').eq('id', data.session.user.id).single();
+    const user = { id: data.session.user.id, name: perfil?.nombre || data.session.user.email, email: data.session.user.email };
+    saveSession(user);
+    showUserPanel(user);
   } else {
     showPanel('main');
   }
@@ -751,10 +706,10 @@ function applyTheme() {
    NAVEGACIÓN ENTRE PANELES
 ============================================================ */
 function showPanel(panel) {
-  ['panelMain','panelRecovery','panelVerify','panelUser'].forEach(id => {
+ ['panelMain','panelRecovery','panelUser'].forEach(id => {
     document.getElementById(id).style.display = 'none';
   });
-  const map = { main:'panelMain', recovery:'panelRecovery', verify:'panelVerify', user:'panelUser' };
+  const map = { main:'panelMain', recovery:'panelRecovery', user:'panelUser' };
   document.getElementById(map[panel]).style.display = '';
   clearAlerts();
 }
@@ -778,46 +733,26 @@ async function handleLogin(e) {
   const pass  = document.getElementById('loginPass').value;
   let   valid = true;
 
-  if (!isValidEmail(email)) {
-    setFieldError('loginEmail', 'loginEmailMsg', 'Ingresa un correo válido');
-    valid = false;
-  }
-  if (pass.length < 6) {
-    setFieldError('loginPass', 'loginPassMsg', 'La contraseña es muy corta');
-    valid = false;
-  }
+  if (!isValidEmail(email)) { setFieldError('loginEmail','loginEmailMsg','Ingresa un correo válido'); valid = false; }
+  if (pass.length < 6) { setFieldError('loginPass','loginPassMsg','La contraseña es muy corta'); valid = false; }
   if (!valid) return;
 
-  setLoading('btnLogin', 'spinnerLogin', 'btnLoginTxt', true);
+  setLoading('btnLogin','spinnerLogin','btnLoginTxt', true);
 
-  await delay(900); // → BACKEND: await api.login(email, pass)
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
 
-  const users = getUsers();
-  const user  = users.find(u => u.email === email);
+  setLoading('btnLogin','spinnerLogin','btnLoginTxt', false);
 
-  setLoading('btnLogin', 'spinnerLogin', 'btnLoginTxt', false);
-
-  if (!user) {
-    showAlert('mainAlert', 'error', '❌ No encontramos una cuenta con ese correo.');
-    return;
-  }
-  if (user.password !== hashSimple(pass)) {
-    showAlert('mainAlert', 'error', '❌ Contraseña incorrecta. Inténtalo de nuevo.');
-    setFieldError('loginPass', 'loginPassMsg', 'Contraseña incorrecta');
-    return;
-  }
-  if (!user.verified) {
-    pendingEmail = email;
-    document.getElementById('verifyEmailShown').textContent = email;
-    showPanel('verify');
-    startResendCountdown();
-    showAlert('verifyAlert', 'info', '📧 Debes verificar tu correo antes de ingresar. Ingresa el código enviado.');
+  if (error) {
+    showAlert('mainAlert','error','❌ Correo o contraseña incorrectos.');
     return;
   }
 
-  // Sesión exitosa
-  const remember = document.getElementById('rememberMe').checked;
-  saveSession(user, remember);
+  const { data: perfil } = await supabaseClient
+    .from('perfiles').select('*').eq('id', data.user.id).single();
+
+  const user = { id: data.user.id, name: perfil?.nombre || email, email };
+  saveSession(user);
   showToast('👋', `¡Bienvenido de vuelta, ${user.name.split(' ')[0]}!`);
   setTimeout(() => showUserPanel(user), 600);
 }
@@ -836,125 +771,34 @@ async function handleRegister(e) {
   const terms   = document.getElementById('acceptTerms').checked;
   let   valid   = true;
 
-  if (name.length < 2) {
-    setFieldError('regName','regNameMsg','Ingresa tu nombre completo'); valid = false;
-  }
-  if (!isValidEmail(email)) {
-    setFieldError('regEmail','regEmailMsg','Ingresa un correo válido'); valid = false;
-  }
-  if (pass.length < 8) {
-    setFieldError('regPass','regPassMsg','La contraseña debe tener al menos 8 caracteres'); valid = false;
-  }
-  if (pass !== confirm) {
-    setFieldError('regPassConfirm','regPassConfirmMsg','Las contraseñas no coinciden'); valid = false;
-  }
-  if (!terms) {
-    setFieldError(null,'termsMsg','Debes aceptar los términos y condiciones'); valid = false;
-  }
+  if (name.length < 2) { setFieldError('regName','regNameMsg','Ingresa tu nombre completo'); valid = false; }
+  if (!isValidEmail(email)) { setFieldError('regEmail','regEmailMsg','Ingresa un correo válido'); valid = false; }
+  if (pass.length < 8) { setFieldError('regPass','regPassMsg','La contraseña debe tener al menos 8 caracteres'); valid = false; }
+  if (pass !== confirm) { setFieldError('regPassConfirm','regPassConfirmMsg','Las contraseñas no coinciden'); valid = false; }
+  if (!terms) { setFieldError(null,'termsMsg','Debes aceptar los términos y condiciones'); valid = false; }
   if (!valid) return;
 
   setLoading('btnRegister','spinnerRegister','btnRegisterTxt', true);
-  await delay(1000); // → BACKEND: await api.register(name, email, pass)
 
-  const users = getUsers();
-  if (users.find(u => u.email === email)) {
+  const { data, error } = await supabaseClient.auth.signUp({
+    email, password: pass, options: { data: { nombre: name } }
+  });
+
+  if (error) {
     setLoading('btnRegister','spinnerRegister','btnRegisterTxt', false);
-    showAlert('mainAlert','error','❌ Ya existe una cuenta con ese correo. ¿Quieres iniciar sesión?');
-    setFieldError('regEmail','regEmailMsg','Este correo ya está registrado');
+    showAlert('mainAlert','error', error.message.includes('already registered')
+      ? '❌ Ya existe una cuenta con ese correo.' : '❌ No se pudo crear la cuenta. Intenta de nuevo.');
     return;
   }
 
-  // Crear usuario (pendiente de verificación)
-  const newUser = {
-    id:       Date.now(),
-    name,
-    email,
-    phone:    document.getElementById('regPhone').value.trim(),
-    password: hashSimple(pass),
-    verified: false,
-    otp:      generateOTP(),
-    createdAt: new Date().toISOString(),
-  };
-  users.push(newUser);
-  saveUsers(users);
+  if (data.user) {
+    await supabaseClient.from('perfiles').insert({ id: data.user.id, nombre: name, correo: email });
+  }
 
   setLoading('btnRegister','spinnerRegister','btnRegisterTxt', false);
-
-  // Ir a verificación
-  pendingEmail = email;
-  document.getElementById('verifyEmailShown').textContent = email;
-  showPanel('verify');
-  startResendCountdown();
-  showToast('📧', 'Código de verificación enviado');
-  showAlert('verifyAlert','info',`📧 Simulación: tu código es <strong>${newUser.otp}</strong> (en producción llegaría al correo)`);
-}
-
-/* ============================================================
-   VERIFICACIÓN OTP
-============================================================ */
-function otpMove(el, idx) {
-  el.value = el.value.replace(/[^0-9]/g,'');
-  if (el.value && idx < 5) document.getElementById('otp' + (idx+1)).focus();
-}
-function otpBack(e, idx) {
-  if (e.key === 'Backspace' && !e.target.value && idx > 0) {
-    document.getElementById('otp' + (idx-1)).focus();
-  }
-}
-function getOTPValue() {
-  return [0,1,2,3,4,5].map(i => document.getElementById('otp'+i).value).join('');
-}
-function clearOTP() {
-  [0,1,2,3,4,5].forEach(i => { document.getElementById('otp'+i).value=''; });
-  document.getElementById('otp0').focus();
-}
-
-async function handleVerify(e) {
-  e.preventDefault();
-  const code = getOTPValue();
-  if (code.length < 6) {
-    showAlert('verifyAlert','error','Ingresa los 6 dígitos del código'); return;
-  }
-
-  setLoading('btnVerify','spinnerVerify','btnVerifyTxt', true);
-  await delay(800); // → BACKEND: await api.verifyOTP(pendingEmail, code)
-
-  const users = getUsers();
-  const user  = users.find(u => u.email === pendingEmail);
-
-  setLoading('btnVerify','spinnerVerify','btnVerifyTxt', false);
-
-  if (!user) {
-    showAlert('verifyAlert','error','No se encontró la cuenta. Vuelve a registrarte.'); return;
-  }
-  if (user.otp !== code) {
-    showAlert('verifyAlert','error','❌ Código incorrecto. Revisa tu correo o solicita uno nuevo.');
-    clearOTP();
-    return;
-  }
-
-  // Verificado
-  user.verified = true;
-  user.otp = null;
-  saveUsers(users);
-  saveSession(user, false);
-  clearResendTimer();
-
-  showToast('🎉','¡Cuenta verificada! Bienvenido a Ruta 10');
-  setTimeout(() => showUserPanel(user), 700);
-}
-
-function resendCode() {
-  const users = getUsers();
-  const user  = users.find(u => u.email === pendingEmail);
-  if (!user) return;
-
-  user.otp = generateOTP();
-  saveUsers(users);
-
-  showAlert('verifyAlert','info',`📧 Nuevo código enviado. Simulación: <strong>${user.otp}</strong>`);
-  clearOTP();
-  startResendCountdown();
+  showToast('📧','Cuenta creada. Revisa tu correo');
+  showAlert('mainAlert','success','✅ Te enviamos un enlace de confirmación a <strong>' + email + '</strong>. Verifícalo y luego inicia sesión.');
+  switchAuthTab('login');
 }
 
 /* ============================================================
@@ -965,18 +809,13 @@ async function handleRecovery(e) {
   clearAlerts();
 
   const email = document.getElementById('recoveryEmail').value.trim();
-  if (!isValidEmail(email)) {
-    setFieldError('recoveryEmail','recoveryEmailMsg','Ingresa un correo válido'); return;
-  }
+  if (!isValidEmail(email)) { setFieldError('recoveryEmail','recoveryEmailMsg','Ingresa un correo válido'); return; }
 
   setLoading('btnRecovery','spinnerRecovery','btnRecoveryTxt', true);
-  await delay(1000); // → BACKEND: await api.sendPasswordReset(email)
+  await supabaseClient.auth.resetPasswordForEmail(email);
   setLoading('btnRecovery','spinnerRecovery','btnRecoveryTxt', false);
 
-  // Siempre mostrar éxito (no revelar si el email existe)
-  showAlert('recoveryAlert','success',
-    '✅ Si ese correo está registrado, recibirás un enlace en los próximos minutos. Revisa tu bandeja de spam.');
-
+  showAlert('recoveryAlert','success','✅ Si ese correo está registrado, recibirás un enlace en los próximos minutos. Revisa tu bandeja de spam.');
   document.getElementById('recoveryEmail').value = '';
 }
 
@@ -990,13 +829,11 @@ function showUserPanel(user) {
   document.getElementById('userEmailDisplay').textContent = user.email;
 }
 
-function handleLogout() {
+async function handleLogout() {
+  await supabaseClient.auth.signOut();
   clearSession();
   showToast('👋','Sesión cerrada correctamente');
-  setTimeout(() => {
-    showPanel('main');
-    switchAuthTab('login');
-  }, 600);
+  setTimeout(() => { showPanel('main'); switchAuthTab('login'); }, 600);
 }
 
 /* ============================================================
@@ -1099,10 +936,8 @@ function getUsers()        { return JSON.parse(localStorage.getItem(DB_KEY) || '
 function saveUsers(users)  { localStorage.setItem(DB_KEY, JSON.stringify(users)); }
 
 function getSession()      { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); }
-function saveSession(user, remember) {
-  const session = { id:user.id, name:user.name, email:user.email, verified:user.verified, remember };
-  localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-  // Exporta al script.js principal
+function saveSession(user) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify(user));
   localStorage.setItem('ruta10_logged', 'true');
   localStorage.setItem('ruta10_username', user.name);
 }
