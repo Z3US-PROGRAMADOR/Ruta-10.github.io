@@ -751,7 +751,7 @@ async function handleLogin(e) {
   const { data: perfil } = await supabaseClient
     .from('perfiles').select('*').eq('id', data.user.id).single();
 
-  const user = { id: data.user.id, name: perfil?.nombre || email, email };
+  const user = { id: data.user.id, name: perfil?.nombre || email.split('@')[0], email };
   saveSession(user);
   showToast('👋', `¡Bienvenido de vuelta, ${user.name.split(' ')[0]}!`);
   setTimeout(() => showUserPanel(user), 600);
