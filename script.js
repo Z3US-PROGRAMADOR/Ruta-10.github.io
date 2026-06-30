@@ -787,18 +787,26 @@ function goToAuth() {
     JSON.parse(localStorage.getItem('ruta10_user') || 'null') ||
     JSON.parse(sessionStorage.getItem('ruta10_user') || 'null');
 
-  const btn = document.getElementById('btnLogin');
+  const btn          = document.getElementById('btnLogin');
+  const btnAccount   = document.getElementById('btnAccount');
+  const btnNoAccount = document.getElementById('btnAccountIcon');
   if (!btn) return;
 
   if (session && session.name) {
-    /* Hay sesión activa — muestra el nombre */
+    /* Hay sesión activa */
     const firstName = session.name.split(' ')[0];
     btn.textContent  = `👤 ${firstName}`;
     btn.onclick      = () => { window.location.href = 'auth.html'; };
+
+    if (btnAccount)   btnAccount.style.display   = 'flex';   // ícono rojo de cuenta
+    if (btnNoAccount) btnNoAccount.style.display = 'none';
   } else {
-    /* Sin sesión — muestra "Ingresar" */
+    /* Sin sesión */
     btn.textContent  = 'Ingresar';
     btn.onclick      = goToAuth;
+
+    if (btnAccount)   btnAccount.style.display   = 'none';
+    if (btnNoAccount) btnNoAccount.style.display = 'flex';   // ícono normal (esconder o mostrar según prefieras)
   }
 })();
 
